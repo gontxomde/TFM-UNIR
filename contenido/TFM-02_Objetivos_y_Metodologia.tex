@@ -1,36 +1,43 @@
 \chapter{Objetivos y Metodología}\label{chap:objetivos}
-\textbf{Objetivos concretos y metodología de trabajo}
-Este bloque es el puente entre el estudio del dominio y la contribución a realizar. Según el tipo concreto de trabajo, el bloque se puede organizar de distintas formas, pero los siguientes elementos deberían estar presentes con mayor o menor detalle.
-Objetivo general
+
+Este trabajo tiene como objetivo presentar un caso de uso de las herramientas estudiadas en el máster. Como se ha descrito en capítulos anteriores, el caso de uso elegido es partir de fuentes de datos relacionadas con películas y desarrollar un \textbf{sistema de recomendación} que sea capaz de dar al usuario películas similares a las dadas por él.\\
+
+Para ello se realizará un \textbf{análisis de los datos} y una presentación teórica de los diferentes modelos que existen para crear un sistema de recomendación. Finalemente se escogerá una técnica concreta en función de sus ventajas y los datos disponibles y se implementará. Para que pueda ser usado en un entorno más productivo y fuera de un ordenador particular, se integrará en el flujo un chatbot que pueda recibir la información del usuario, procesarla, y darle recomendaciones haciendo llamadas a una \textbf{API} que será creada.
+
+
 
 %--- Genereal Objectives ---%
 \section{Objetivos Generales}\label{sec:objgenerales}
-Los trabajos aplicados se centran en conseguir un impacto concreto, demostrando la
-efectividad de una tecnología, proponiendo una nueva metodología o aportando nuevas
-herramientas tecnológicas. El objetivo por tanto no debe ser sin más ``crear una
-herramienta'' o ``desarrollar una metodología'', sino que debe centrarse en conseguir un efecto observable.\par
-Este objetivo podría dar lugar a un trabajo de tipo 3 (desarrollo de metodologías y
-frameworks) que plantease una nueva metodología de captura de datos basada en la
-aplicación de APIs públicas como TinCan, acompañada de guías de desarrollo,
-ejemplos de uso y guías de buenas prácticas para desarrolladores; o de tipo 2
-(desarrollo de software) en la que se genere un sistema de recopilación de eventos para entornos cloud basado en TinCan.
+
+En el mundo actual los usuarios disponen de una gran cantidad de recursos a consumir cuando entrar a una plataforma como YouTube o Netflix. Por tanto, se hace necesario que las plataformas sean capaces de entender sus \textbf{gustos y preferencias} para que el cliente consuma la mayor cantidad de contenido posible. En este trabajo se explora la vía de creación de un sistema de recomendación basado en contenido que, a partir de modelos de lenguaje sea capaz de entender el contenido de cada una de las películas y a partir de una preferencia dada por el usuario, le pueda recomendar otras películas similares para ver.\\
+
+Como se verá más adelante, en \ref{chap:recom}, existen diferentes sistemas de recomendación. En este trabajo nos centraremos en sistemas basados en contenido, dado que tienen ventajas como su capacidad para recomendar productos nuevos y la no necesidad de información del usuario. Además, la información sobre las películas es más sencilla de obtener en la red.\\
+
+Explicado esto, este trabajo se engloba dentro de los trabajos de tipo 2 (desarrollo de software). Se realizará un desarrollo de una solución \textit{end to end} al problema de la recomendación de contenidos a usuarios. Desde la recopilación de datos y metadatos sobre películas, hasta la creación de la interfaz a través de la que el usuario final podrá hacer solicitudes al sistema creado y obtener recomendaciones.\\
+
+Además, se realizará una revisión de los diferentes sistemas de recomendación existentes en la actualidad y su aparición en los últimos años.\\
+
+Finalmente, creemos necesario realizar un análisis de los datos que se utilizaran, previo a la creación del sistema de recomendación. En el campo de la Ciencia de Datos se considera una buena práctica la realización de un análisis de los datos de forma previa a la creación del sistema de recomendación en sí. Además de este análisis preliminar, mostraremos cómo el disponer de un conjunto lo suficientemente extenso de datos puede servir para responder preguntas sobre los usuarios, que pueden ayudar al desarrollo del negocio.\\
 
 
 %--- Specific Objectives ---%
 \section{Objetivos Específicos}\label{sec:objespecificos}
-Independientemente del tipo de trabajo, la hipótesis o el objetivo general típicamente se dividirán en un conjunto de objetivos más específicos analizables por separado. Suelen ser explicaciones de los diferentes pasos a seguir en la consecución del objetivo general.
-Con los objetivos, has de concretar qué pretendes conseguir. Se formulan con un verbo en infinitivo más el contenido del objeto de estudio. Se pueden utilizar fórmulas verbales, como las siguientes:\par
-{\centering
-ANALIZAR – CALCULAR – CLASIFICAR – COMPARAR – CONOCER -
-CUANTIFICAR – DESARROLLAR - DESCRIBIR – DESCUBRIR - DETERMINAR –
-ESTABLECER – EVALUAR - EXPLORAR -IDENTIFICAR –INDAGAR - MEDIR –
-PROPOPONER - SINTETIZAR – VERIFICAR
-}\par
 
-En un trabajo como el anterior (tipo 2), incluiría tareas tales como ``Identificar las posibilidades de captura de datos del escenario'', ``Diseñar e implementar la pasarela de datos que permita enviar los registros a través de TinCan'', ``Desarrollar un manual de uso para poder añadir nuevas plataformas al entorno de captura de datos'', ``Proponer el modelo de datos bajo el que se almacenarán los datos registrados'' o ``Evaluar la herramienta implementada en un escenario real''.
+Una vez descritos los objetivos generales del trabajo que se desarrollará, se hace necesario desgranarlos en una serie de objetivos más específicos que puedan ser más facilmente analizados y desarrollados y para los que pueda establecerse un grado de consecución.
+
+\begin{itemize}
+    \item \textbf{CONOCER} las fuentes de datos disponibles, el formato de los datos y sus posibilidades de explotación.
+    \item \textbf{DESCRIBIR} los datos disponibles y \textbf{ANALIZAR} someramente los datos para conclusiones sobre los mismos.
+    \item \textbf{IDENTIFICAR} tendencias a partir de los datos y \textbf{RESPONDER} a partir de ellos a preguntas que puedan surgir.
+    \item \textbf{DESARROLLAR} el sistema de recomendación.
+    \item \textbf{INTEGRAR} la solución desarrollada en un entorno API-bot que pueda ser usada por usuarios finales.
+    \item \textbf{VERIFICAR} la usabilidad de la solución y \textbf{EVALUAR} el rendimiento de la misma.
+    \item \textbf{IDENTIFICAR} las flaquezas del sistema y los puntos de mejora para \textbf{PROPONER} próximos pasos.
+\end{itemize}
 
 %--- Work Methodology ---%
 \section{Metodología de Trabajo}\label{sec:metodología}
 
-De cara a alcanzar los objetivos específicos (y con ellos el objetivo general o la
-validación/refutación de la hipótesis), será necesario realizar una serie de pasos. La metodología del trabajo debe describir qué pasos se van a dar, el porqué de cada paso, qué instrumentos se van a utilizar, cómo se van a analizar los resultados, etc.
+La metodología de trabajo para el desarrollo de este proyecto se hace dificil de describir \textit{a priori}. A lo largo del trabajo se irán analizando los problemas que vayan surgiendo y proponiendo y justificando las soluciones elegidas de entre las posibles.\\
+
+En este apartado y de forma previa, cabe detallar que el proyecto se implementará en su gran mayoría en el lenguaje de programación Python, por su versatilidad y la gran cantidad de librerías que hay disponibles para este lenguaje. Además, para resolver problemas específicos, se hará uso de librerías de Procesamiento del Lenguaje Natural como NLTK, SciKit Learn para la implementación de modelos de aprendizaje automático y frameworks web como Flask para la implementación de la API. Finalmente, se hará uso de una plataforma de mensajería instantánea como Telegram, que servirá para implementar la interfaz con el usuario.
