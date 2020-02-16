@@ -18,6 +18,10 @@
 %--- Archivo de configuracion global ---%
 \input{formato/conf}
 
+%--- Archivo de configuracion jupyter ---%
+\input{./formato/jupyter_export}
+
+
 %---  Compilacion rapida ---%
 % Para ahorrar tiempo de compilacion, comentar las secciones que no se quieran compilar
 % Carácter % en frente de la sección.
@@ -33,8 +37,10 @@
   contenido/TFM-09_Results,
   contenido/TFM-10_Bibliografia,
   contenido/TFM-11_Apendice_1,
-  contenido/TFM-11_Apendice_2 
+  contenido/TFM-11_Apendice_2,
+  contenido/TFM-11_Apendice_3
 }
+\usepackage[final]{pdfpages}
 
 %---------------------------------------------%
 %           Inicio del documento
@@ -49,26 +55,28 @@
         \include{contenido/TFM-00_Abstract}  %Abtract
         \listoffigures      % Índice de imagenes
         \listoftables       % Índice de tablas
+        \lstlistoflistings %Indice de listings de codigo
     
     %---    Cuerpo ---% 
     \mainmatter
     \pagestyle{mainmatter}
         \setcounter{page}{6}
         %Incluir aqui todos los capitulos (carpeta contenido)
-    	\include{contenido/TFM-01_Introduccion}
-        \include{contenido/TFM-02_Objetivos_y_Metodologia}
+    	%\include{contenido/TFM-01_Introduccion}
+        %\include{contenido/TFM-02_Objetivos_y_Metodologia}
         \include{contenido/TFM-03_Adquisicion},
-        \include{contenido/TFM-04_Analisis},
-        \include{contenido/TFM-05_Recomendacion},
+        %\include{contenido/TFM-04_Analisis},
+        %\include{contenido/TFM-05_Recomendacion},
         \include{contenido/TFM-06_Creacion},
-        \include{contenido/TFM-07_Integracion},
-        \include{contenido/TFM-09_Results}
+        %\include{contenido/TFM-07_Integracion},
+        %\include{contenido/TFM-09_Results}
 
     %--- Apéndices y bibliografia ---%
     \include{contenido/TFM-10_Bibliografia}
     \begin{appendices}
         %Incluir aqui todos los apendices (carpeta contenido).
-        \include{contenido/TFM-11_Apendice_1}
-        \include{contenido/TFM-11_Apendice_2}
+        %\include{contenido/TFM-11_Apendice_1}
+        %\include{contenido/TFM-11_Apendice_2}
+        %\include{contenido/TFM-11_Apendice_3}
     \end{appendices}
 \end{document}
