@@ -234,12 +234,16 @@ Por tanto, puede concluirse que en el dataset no existen entradas duplicadas. A 
 Las keywords tendrán un papel fundamental en el funcionamiento del sistema. De hecho, como se verá en el Capítulo \ref{chap:creacion}, las recomendaciones se realizarán en base a la similaridad entre películas, y para esta medida se usarán las keywords. Por tanto, se hace necesario analizar el contenido de esta variable, puesto que se realizará un uso extensivo de ella.\\
 
 Incialmente, el dataset contiene un total de 9474 keywords. En la Figura\ref{fig:keywords_histogram} se muestra la distribución del número de keywords. Puede verse que aun habiendo casi el doble de keywords que de películas, la mayoría de películas contienen entre 5 y 15 keywords, por lo que el número de keywords no es preocupante.
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \captionsetup{width=10cm}
-    \includegraphics[height=10cm]{contenido/imagenes/keyword_histogram.png}
+    \includegraphics[width=12cm]{contenido/imagenes/keyword_histogram.png}
     \caption{Histograma con el número de keywords de cada película.}
     \label{fig:keywords_histogram}
 \end{figure}
 
-Sin embargo, tratar con lenguaje natural siempre implica poner especial atención en lo que se consideran palabras diferentes. Es lógico pensar
+Sin embargo, tratar con lenguaje natural siempre implica poner especial atención en lo que se consideran palabras diferentes. Es lógico pensar que a la hora de poner las keywords de las películas no se ha tenido en cuenta las posibles similitudes entre keywords ni se han asignado de una lista cerrada.\\
+
+Los seres humanos nos expresamos de forma muy diferente y probablemente las keywords hayan sido asignadas por personas diferentes. Por lo cual es esperable que haya keywords que signifiquen aproximadamente lo mismo pero que por tener distintas grafías actualmente se considerarían diferentes palabras.\\
+
+El lenguaje de Python es ampliamente utilizado en la disciplina de la ciencia de datos, es por ello que existen numerosas liberías de inestimable ayuda para el NLP. Una de las más conocidas es NLTK (\textbf{N}atural \textbf{L}anguage \textbf{T}ool\textbf{K}it).
