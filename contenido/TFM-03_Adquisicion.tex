@@ -43,6 +43,7 @@ Para la creación del sistema de recomendación de películas basado en contenid
     \end{itemize}
 \end{itemize}
 
+\newpage
 \section{Importación de datos}
 
 El primer paso en la etapa de adquisición de los datos consiste en leer ambos ficheros (en formato csv) y obtener los DataFrame de Pandas correspondintes. Las columnas genres, keywords, production\_countries, production\_companies, spoken\_languages, cast y crew están en formato json en origen. Es por ello que en las funciónes de lectura de los datos tienen un trato especial. Las funciones implementadas son las siguientes:
@@ -50,7 +51,7 @@ El primer paso en la etapa de adquisición de los datos consiste en leer ambos f
 \begin{lstlisting}[language=Python, caption=Lectura de los datos del fichero de películas.]
 import json
 import pandas as pd
-def load_tmdb_movies(path):
+def load_movies(path):
     """Función utilizada para cargar el dataset de las películas. Se transforma a fecha el campo de fecha de salida
     y se cargan como listas los campos que están guardados como json.
     Args:
@@ -67,7 +68,7 @@ def load_tmdb_movies(path):
 \end{lstlisting}
 
 \begin{lstlisting}[language=Python, caption=Lectura de los datos del fichero de créditos.]
-def load_tmdb_credits(path):
+def load_credits(path):
     """Función utilizada para cargar el dataset de los créditos. Se cargan como listas los campos que están guardado
     Args:
         path (str): Ruta hasta el archivo de tmdb_5000_credits.csv
@@ -86,7 +87,7 @@ Pandas es una librería rápida, flexible, opensource y relativamente fácil de 
 En esta primera etapa de importación, el objetivo es obtener un único DataFrame que contenga información de ambos conjuntos de datos. Un problema habitual que tiene lugar al juntar dos ficheros es la información faltante de los ficheros. Hay que tratar de forma especial el acceso a los datos de cada DataFrame a la hora de juntarlos, pues puede que haya campos que no estén informados. Para ello, definimos una función que accede de forma segura a los datos, ya que en caso de no encontrarlo devuelve nulo, evitando errores de ejecución.
 
 \begin{lstlisting}[language=Python, caption=Acceso a los datos de forma segura.]
-def safe_access(container, index_values):
+def get_element(container, index_values):
     """Función para acceder de forma segura a valores. En caso de que no se encuentre uno de ellos, se devuelve NaN
     en vez de lanzar un error.
     Args:
@@ -119,20 +120,21 @@ def get_director(crew_data):
 
 Como se ha visto anteriormente, el objetivo del proyecto es crear un sistema de recomendación de películas basado en contenido. Por tanto, resulta vital conseguir información del contenido de las películas. El campo fundamental para conseguir este fin es el campo keywords, que contiene las palabras clave de cada película. Este campo está en origen en formato json, con información que no es relevante para el objetivo del proyecto. Para obtener únicamente las palabras clave se implementa pipe\_flatten\_names que extrae estas palabras clave.
 \begin{lstlisting}[language=Python, caption= Extracción de las palabras clave a partir del JSON del DataFrame.]
-def get_director(crew_data):
-    """Devuelve el director dado un JSON con toda la composición del equipo de la película.
+def flatten_names(keywords):
+    """Obtiene una lista con las keywords separadas por un pipe | extrayéndolas del json.
+    
     Args:
-        crew_data (json): JSON con el equipo que ha realizado la película
+        keywords (json): keywords de la película
+    
     Returns:
-        str: Director de la película
+        str: keywords de la película juntas
     """
-    directors = [x['name'] for x in crew_data if x['job'] == 'Director']
-    return safe_access(directors, [0])
+    return '|'.join([x['name'] for x in keywords])
 \end{lstlisting}
 
 Para terminar con la etapa de importación y carga de los datos, se crea la función que añade al DataFrame de películas la información de credits necesaria.
 \begin{lstlisting}[language=Python, caption=]
-def convert_to_original_format(movies, credits):
+def combine_collections(movies, credits):
     """Aplica una serie de funciones para añadir información al dataset de películas a partir del
     conjunto de datos de créditos
     Args:
@@ -181,13 +183,15 @@ warnings.filterwarnings('ignore')
 #Definimos la función a utilizar para obtener el lexema de las palabras.
 PS = nltk.stem.PorterStemmer()
 # load the dataset
-credits = load_tmdb_credits("./datos/tmdb_5000_credits.csv")
-movies = load_tmdb_movies("./datos/tmdb_5000_movies.csv")
-df_initial = convert_to_original_format(movies, credits)
+#df_initial = pd.read_csv("../input/movie_metadata.csv")
+credits = load_credits("../RecommendationEngine/datos/tmdb_5000_credits.csv")
+movies = load_movies("../RecommendationEngine/datos/tmdb_5000_movies.csv")
+df_initial = combine_collections(movies, credits)
 \end{lstlisting}
 
 Con esto, se consigue tener un único DataFrame sobre el que trabajar.
 
+\newpage
 \section{Limpieza y transformación de los datos}
 
 Una vez se han importado y cargado los datos, la siguiente etapa es el limpiado de los datos, tanto para lidiar con los posibles datos faltantes.
@@ -246,4 +250,295 @@ Sin embargo, tratar con lenguaje natural siempre implica poner especial atenció
 
 Los seres humanos nos expresamos de forma muy diferente y probablemente las keywords hayan sido asignadas por personas diferentes. Por lo cual es esperable que haya keywords que signifiquen aproximadamente lo mismo pero que por tener distintas grafías actualmente se considerarían diferentes palabras.\\
 
-El lenguaje de Python es ampliamente utilizado en la disciplina de la ciencia de datos, es por ello que existen numerosas liberías de inestimable ayuda para el NLP. Una de las más conocidas es NLTK (\textbf{N}atural \textbf{L}anguage \textbf{T}ool\textbf{K}it).
+El lenguaje de Python es ampliamente utilizado en la disciplina de la ciencia de datos, es por ello que existen numerosas liberías de inestimable ayuda para el NLP. Una de las más conocidas es NLTK \cite{NLTK} (\textbf{N}atural \textbf{L}anguage \textbf{T}ool\textbf{K}it).\\
+
+En este proyecto es importante extraer el significado original de las keywords, es decir, no importa si la keyword es ``drama'' o ``dramático'', ya que significan lo mismo. En este caso utilizamos la librería NLTK, que en concreto implementa una función denominada \texttt{PorterStemmer}\cite{porter}, que es una función que sirve para extraer lexemas de las palabras. Con este paso se consigue extraer la raiz de la palabra para evitar problemas con plurales, etc. En primer lugar se implementa la función\texttt{keywords\_inventory} que recoge las keywords y crea un diccionario para ver en qué palabra queda otra.
+
+\begin{lstlisting}[language=Python, caption= Obtención del lexema de cada keywords y creación del diccionario de equivalencia.]
+def keywords_inventory(dataframe, column = 'plot_keywords'):
+    """Devuelve un diccionario con las palabras que derivan de cada lexema
+    a partir de un DataFrame y la columna de la que se quiere extraer
+    
+    Args:
+        dataframe (pd.DataFrame): DataFrame del que obtener la información.
+        column (str, optional): Nombre de la columna. Defaults to 'plot_keywords'.
+    
+    Returns:
+        list: Keywords finales que aparecen
+        dict: Relación lexema <-> palabras
+        dict: Palabra más corta derivada del lexema
+    """
+    PS = nltk.stem.PorterStemmer()
+    keywords_roots  = dict()  # recoger las palabras de cada lexema
+    keywords_select = dict()  # asociacion: lexema <-> keyword
+    category_keys = []
+    icount = 0
+    for s in dataframe[column]:
+        if pd.isnull(s): continue
+        for t in s.split('|'):
+            t = t.lower() ; root = PS.stem(t)
+            # Para cada lexema, un set con las palabras que lo usan
+            if root in keywords_roots:                
+                keywords_roots[root].add(t)
+            else:
+                keywords_roots[root] = {t}
+    
+    for s in keywords_roots.keys():
+        if len(keywords_roots[s]) > 1:  
+            min_length = 1000
+            for k in keywords_roots[s]:
+                if len(k) < min_length:
+                    key = k ; min_length = len(k)            
+            category_keys.append(key)
+            keywords_select[s] = key
+        else:
+            category_keys.append(list(keywords_roots[s])[0])
+            keywords_select[s] = list(keywords_roots[s])[0]
+                   
+    print("Número de keywords en la variable: '{}': {}".format(column,len(category_keys)))
+    return category_keys, keywords_roots, keywords_select
+\end{lstlisting}
+
+Con el fin de limpiar el dataset se implementa la función \texttt{df\_keywords\_replacement}. Algunos cambios que realiza este paso es tomar por iguales orc y orcs, spy y spying o time travel y time traveler.
+\begin{lstlisting}[language=Python, caption= Extracción del lexema de las keywords.]
+def df_keywords_replacement(df, replacement_dict, roots = False, column = 'plot_keywords'):
+    """Reemplaza las palabras clave de una película por las formas básicas de las mismas.
+
+    Args:
+        df (pd.DataFrame): DataFrame que contiene la información de las películas
+        replacement_dict (dict): Diccionario con los cambios
+        roots (bool, optional): Controla si se obtienen las raices de las palabras de las
+        keywords. Defaults to False.
+        column (str, optional): Columna en la que realizar la transformación. Defaults to 'plot_keywords'.
+
+    Returns:
+        pd.DataFrame: DataFrame con las sustituciones realizadas
+    """
+    PS = nltk.stem.PorterStemmer()
+    df_new = df.copy(deep = True)
+    for index, row in df_new.iterrows():
+        chain = row[column]
+        if pd.isnull(chain): continue
+        new_list = []
+        for s in chain.split('|'): 
+            key = PS.stem(s) if roots else s
+            if key in replacement_dict.keys():
+                new_list.append(replacement_dict[key])
+            else:
+                new_list.append(s)       
+        df_new.set_value(index, column, '|'.join(new_list)) 
+    return df_new
+\end{lstlisting}
+
+Finalmente, se realiza el cambio en el dataset de la siguiente manera:
+
+\begin{lstlisting}[language=Python, caption= Sustitucion de las keywords por su forma primitiva.]
+keywords, keywords_roots, keywords_select = keywords_inventory(df_duplicate_cleaned,
+                                                               column = 'plot_keywords')
+df_keywords_cleaned = df_keywords_replacement(df_duplicate_cleaned, keywords_select,
+                                               roots = True)
+\end{lstlisting}
+
+\subsection{Sinónimos}
+
+En la sección anterior de la memoria, se han explicado las peculiaridades de trabajar con un dataset que contenga texto, así como la estrategia seguida par reducir la cantidad de keywords. Sin embargo, únicamente hemos agrupado las keywords por su lexema, que es además la forma más simple de realizar esta agrupacion. Por ejemplo, si hubiera dos películas, una con la keyword alien y otra con la keyword extraterrestre, únicamente con el paso anterior seguirían siendo películas diferentes.\\
+
+En esta sección se va un paso más alla. La librería NLTK además de extractores de lexema, incluye un submódulo de corpus. En este caso se utilizará el corpus de WordNet. Consiste en una base de datos léxica de sustantivos, verbos, adjetivos y adverbios en inglés agrupados en conjuntos de sinónimos cognitivos, expresando cada uno un concepto diferente. Se trata de una herramienta con muchísimo potencial para el análisis de texto.\\
+
+En este caso concreto, se utilizará el corpus de WordNet \cite{WordNet} implementado en la libería NLTK para sustituir las keywords con menos apariciones por sus sinónimos más frecuentes. Por ejemplo, la keyword extraterrestrial aparece un total de 4 veces. Es posible que sustituirla por alien en esas 4 películas haga que las películas de aliens estén mejor relacionadas, ya que no hay apenas diferencia entre los significados. En concreto, las keywords con menos de 5 apariciones serán sustituidas por su sinónimo más frecuente. Con esto se reemplaza aproximadamente el $6 \%$ de las keywords.
+\begin{lstlisting}[language=Python, caption= Sustitución de las palabras menos frecuentes por sus sinónimos.]
+def test_keyword(word, key_count, threshold):
+    """Devuelve si una palabra aparece un número mayor de veces que el umbral señalado
+    Args:
+        word (str): Palabra a buscar
+        key_count (dict): Diccionario con las apariciones de cada keyword
+        threshold (int): Umbral
+    Returns:
+        bool: True si aparece un número mayor de veces
+    """
+    return (False , True)[key_count.get(word, 0) >= threshold
+    
+keyword_occurences.sort(key = lambda x:x[1], reverse = False)
+key_count = dict()
+for s in keyword_occurences:
+    key_count[s[0]] = s[1]
+# Creación de un diccionario para reemplazar keywords por sinónimos de mayor frecuencia
+remplacement_word = dict()
+icount = 0
+for index, [word, nb_apparitions] in enumerate(keyword_occurences):
+    if nb_apparitions > 5: continue  # Sólo las keywords que aparecen menos de 5 veces
+    lemma = get_synonyms(word)
+    if len(lemma) == 0: continue     #Caso de plurales
+    word_list = [(s, key_count[s]) for s in lemma 
+                  if test_keyword(s, key_count, key_count[word])]
+    word_list.sort(key = lambda x:(x[1],x[0]), reverse = True)    
+    if len(word_list) <= 1: continue       # NO se reemplaza
+    if word == word_list[0][0]: continue    # Reemplazo por sí mismo
+    icount += 1
+    if  icount < 8:
+        print('{:<12} -> {:<12} (init: {})'.format(word, word_list[0][0], word_list))    
+    remplacement_word[word] = word_list[0][0]
+\end{lstlisting}
+
+Conviene recordar que el objetivo de este proyecto es crear un sistema de recomendación de películas \textbf{basado en contenido}. Por ello, de poco sirve tener una keyword que aparezca en una cantidad muy reducida de películas.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup{width=12cm}
+    \includegraphics[height=10cm]{./contenido/imagenes/keyword_cleaning.png}
+\caption{Repeticiones de las keywords antes y después de la limpieza.}
+\label{fig:key_cleaning}
+\end{figure}
+
+En este caso se ha decidido eliminar las keywords con menos de $3$ repeticiones, que como puede verse en la Figura\ref{fig:key_cleaning} afecta a la mayoría de keywords, pasando a tener aproximadamente $6500$ keywords menos. Puede parecer que perdemos mucha información, pero lo que se busca es tener relaciones potentes. Además, como se verá más adelante, se definirá una distancia entre películas, por lo que no es conveniente tener demasiadas dimensiones, ya que se podría tener el problema de la dimensionalidad \cite{wiki:CurseOfDimensionality}
+
+\newpage
+\section{Imputación de valores faltantes}
+
+En estadística, la imputación es el proceso de reemplazar los datos faltantes con valores sustitutos. Son tres los principales problemas que causan los datos faltantes:
+\begin{itemize}
+    \item Introducir una cantidad sustancial de bias.
+    \item Hacer más complicado el tratamiento de los datos.
+    \item Empeorar la eficiencia de los modelos.
+\end{itemize}
+
+Siempre es interesante realizar un análisis de las entradas que tienen datos faltantes, ya que por ejemplo si se tuviera un dataset con información de varias estaciones de medición, podría ser que los datos faltantes no fueran aleatorios, sino producidos por una situación concreta de alguna de las estaciones.\\
+
+Existen dos técnicas principales para imputar estos datos:
+
+\begin{itemize}
+    \item Sustitucion promedio: Implica reemplazar los valores faltantes con la media de esa variable en los demás casos. Tiene el beneficio de no cambiar la media de la distribución. Sin embargo, atenúa las correlaciones que implican a la variable imputada.
+    \item Imputación mediante regresión: Es, por así decirlo, la forma opuesta de realizar la imputación. Imputa una de las variables fijándose en una o varias de las demás. En este caso no se genera cambio en la correlación entre variables pero sí se afecta a la media. Otro problema es que supone que la regresión no tiene un término de error asociado y que es, por tanto, una regresión con $R² = 1$.
+\end{itemize}
+
+En la Figura\ref{fig:correlation} se muestra la matriz de correlación entre las variables del dataset, lo cual aporta información sobre qué variables usar para predecir otras.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup{width=12cm}
+    \includegraphics[height=10cm]{./contenido/imagenes/correlation.png}
+\caption{Correlación entre las variables del dataset}
+\label{fig:corelation}
+\end{figure}
+
+En este caso, se utilizarán varios tipos de imputación, algunos adecuados al dominio concreto del problema. Es necesario resaltar que únicamente se imputarán aquellas variables que sean necesarias para la creación propiamente dicha del recomendados. En la Figura \ref{fig:completion} se muestran los porcentajes de completitud de cada una de las variables que restan.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup{width=12cm}
+    \includegraphics[width= 13cm]{./contenido/imagenes/completion.png}
+\caption{Completitud de las variables del dataset.}
+\label{fig:completion}
+\end{figure}
+
+
+\subsection{Años faltantes}
+
+En el sistema de recomendación, la variable año se utilizará para recomendar al usuario películas relativamente coetáneas a la dada por el usuario. Con el fin de tener el año informado en la mayor cantidad posible de registros, se completará el año teniendo en cuenta los años de creación del resto de películas de su director y los 3 actores principales, realizando un promedio entre todos ellos. Con este fin se implementa la función \texttt{fill\_year}.
+
+\begin{lstlisting}[language=Python, caption={Completado de la variable año en el dataset utilizando el promedio de los años de las películas de su director y actores principales.}]
+def fill_year(df):
+    """Completa la columna faltante del año teniendo en cuenta la media
+    de los periodos de actividad de los actores y el director.
+    """
+    col = ['director_name', 'actor_1_name', 'actor_2_name', 'actor_3_name']
+    usual_year = [0 for _ in range(4)]
+    var        = [0 for _ in range(4)]
+    #_____________________________________________________________
+    # Año medio de actividad para los actores y el director
+    for i in range(len(col)):
+        usual_year[i] = df.groupby(col[i])['title_year'].mean()
+
+    # Diccionario que recoja esta información
+    actor_year = dict()
+    for i in range(4):
+        for s in usual_year[i].index:
+            if s in actor_year.keys():
+                if pd.notnull(usual_year[i][s]) and pd.notnull(actor_year[s]):
+                    actor_year[s] = (actor_year[s] + usual_year[i][s])/2
+                elif pd.isnull(actor_year[s]):
+                    actor_year[s] = usual_year[i][s]
+            else:
+                actor_year[s] = usual_year[i][s]
+
+    # Identificación de los años faltantes
+    missing_year_info = df[df['title_year'].isnull()]
+
+    # Completado de los valores faltantes
+    icount_replaced = 0
+    for index, row in missing_year_info.iterrows():
+        value = [ np.NaN for _ in range(4)]
+        icount = 0 ; sum_year = 0
+        for i in range(4):            
+            var[i] = df.loc[index][col[i]]
+            if pd.notnull(var[i]): value[i] = actor_year[var[i]]
+            if pd.notnull(value[i]): icount += 1 ; sum_year += actor_year[var[i]]
+        if icount != 0: sum_year = sum_year / icount 
+
+        if int(sum_year) > 0:
+            icount_replaced += 1
+            df.set_value(index, 'title_year', int(sum_year))
+    return
+\end{lstlisting}
+
+
+\subsection{Completado de keywords}
+
+Al tratarse de un recomendador basado en contenido, una película que no tenga ninguna keyword nunca será recomendada, ya que no se considerará similar a ninguna. A pesar de que como se ha visto los sistemas basados en contenido y no en opiniones no presentan el problema de los nuevos productos, si que si un producto está ``muerto'' por no tener keywords, lo estará siempre.\\
+
+Para resolver el problema que podría suponer tener películas sin palabras clave, se imputarán keywords en las películas teniendo en cuenta su título. Por ejemplo si la película Alien Covenant no tiene keywords, se incluiría alien como keyword por estar en su título y ser ya una keyword existente. Mediante el Código\ref{lst:keywords} se logra la imputación en el DataFrame.
+
+\begin{lstlisting}[language=Python, caption=Imputación de keywords a partir del título de la película., label ={lst:keywords}]
+icount = 0
+for index, row in df_filling[df_filling['plot_keywords'].isnull()].iterrows():
+    icount += 1
+    word_list = row['movie_title'].strip().split()
+    new_keyword = []
+    for s in word_list:
+        lemma = get_synonyms(s)
+        for t in list(lemma):
+            if t in keywords: 
+                new_keyword.append(t)
+    if new_keyword:
+        df_filling.set_value(index, 'plot_keywords', '|'.join(new_keyword)) 
+\end{lstlisting}
+
+\subsection{Completado mediante regresiones}
+
+Como puede verse en la Figura\ref{fig:corelation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el dataframe:
+
+\begin{lstlisting}[language=Python, caption = Rellenado de la variable de presupuesto teniendo en cuenta el número de votos.]
+df_filling = variable_linreg_imputation(df_filling, 'gross', 'num_voted_users')
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=Imputación de una variable mediante regresión lineal con otra., label ={lst:linreg}]
+ def regression_imputation(df, col_to_predict, ref_col):
+    """Completa los valores de la variable col_to_predict haciendo una regresión
+    lineal en la que la variable predictora es ref_col.
+
+    Args:
+        df (pd.DataFrame): DataFrame de películas
+        col_to_predict (str): Variable a predecir
+        ref_col (str): Variable con la que predecir
+
+    Returns:
+        pd.DataFrame: DataFrame de películas completado
+    """
+    regr = linear_model.LinearRegression()
+    test = df[[col_to_predict,ref_col]].dropna(how='any', axis = 0)
+    X = np.array(test[ref_col])
+    Y = np.array(test[col_to_predict])
+    X = X.reshape(len(X),1)
+    Y = Y.reshape(len(Y),1)
+    regr.fit(X, Y)
+
+    test = df[df[col_to_predict].isnull() & df[ref_col].notnull()]
+    for index, row in test.iterrows():
+        value = float(regr.predict(row[ref_col]))
+        df.at[index, col_to_predict] =  value
+    return df
+\end{lstlisting}
+
+\section{Resumen}
+
+En este capítulo, dedicado a la adquisición, limpieza y completado de los datos se ha puesto de manifiesto la importancia de cada uno de estos pasos. Es quizá la parte menos interesante del proceso. Sin embargo, es fundamental para lograr una buena modelización. Se ha empezado la etapa con unos datos brutos y con datos faltantes y se ha terminado con un dataset prácticamente completo y habiendo tratado y reducido el número de keywords utilizadas; reduciéndose mediante el uso de librerías y métodos de lexematización de las palabras y agrupando por sinónimos.
