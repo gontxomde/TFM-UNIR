@@ -44,7 +44,7 @@ Para la creación del sistema de recomendación de películas basado en contenid
 \end{itemize}
 
 \newpage
-\section{Importación de datos}
+\section{Importación de datos de películas}
 
 El primer paso en la etapa de adquisición de los datos consiste en leer ambos ficheros (en formato csv) y obtener los DataFrame de Pandas correspondintes. Las columnas genres, keywords, production\_countries, production\_companies, spoken\_languages, cast y crew están en formato json en origen. Es por ello que en las funciónes de lectura de los datos tienen un trato especial. Las funciones implementadas son las siguientes:
 
@@ -53,7 +53,7 @@ import json
 import pandas as pd
 def load_movies(path):
     """Función utilizada para cargar el dataset de las películas. Se transforma a fecha el campo de fecha de salida
-    y se cargan como listas los campos que están guardados como json.
+    y se cargan como listas los campos que están guardados como JSON.
     Args:
         path (str): Ruta hasta el archivo de tmdb_5000_movies.csv
     Returns:
@@ -121,7 +121,7 @@ def get_director(crew_data):
 Como se ha visto anteriormente, el objetivo del proyecto es crear un sistema de recomendación de películas basado en contenido. Por tanto, resulta vital conseguir información del contenido de las películas. El campo fundamental para conseguir este fin es el campo keywords, que contiene las palabras clave de cada película. Este campo está en origen en formato json, con información que no es relevante para el objetivo del proyecto. Para obtener únicamente las palabras clave se implementa pipe\_flatten\_names que extrae estas palabras clave.
 \begin{lstlisting}[language=Python, caption= Extracción de las palabras clave a partir del JSON del DataFrame.]
 def flatten_names(keywords):
-    """Obtiene una lista con las keywords separadas por un pipe | extrayéndolas del json.
+    """Obtiene una lista con las keywords separadas por un pipe | extrayéndolas del JSON.
     
     Args:
         keywords (json): keywords de la película
@@ -198,7 +198,7 @@ Una vez se han importado y cargado los datos, la siguiente etapa es el limpiado 
 
 \subsection{Entradas duplicadas}
 
-En ocasiones los DataSets que se encuentran en Internet no están en un estado perfecto, y en ocasiones se tienen datos duplicados. Es importante comprobar si existen datos duplicados, ya que si no a la hora de crear modelos puede darse más importancia a unos registros que a otros, lo cual resulta un error de concepto. En primer lugar, por tanto, comprobamos la existencia de entradas duplicadas.
+En ocasiones los datasets que se encuentran en Internet no están en un estado perfecto, y en ocasiones se tienen datos duplicados. Es importante comprobar si existen datos duplicados, ya que si no a la hora de crear modelos puede darse más importancia a unos registros que a otros, lo cual resulta un error de concepto. En primer lugar, por tanto, comprobamos la existencia de entradas duplicadas.
 \begin{lstlisting}[language=Python, caption=Entradas duplicadas]
 doubled_entries = df_initial[df_initial.id.duplicated()]
 doubled_entries.shape
@@ -233,7 +233,7 @@ El resultado se muestra en la Tabla\ref{tab:duplicated_entries}. Como puede comp
 
 Por tanto, puede concluirse que en el dataset no existen entradas duplicadas. A pesar de tener el mismo dataset al inicio de este apartado que ahora, se ha incluido por completitud, ya que es un paso que debe realizarse siempre.
 
-\subsection{Limpieza de keywords}
+\subsection{Limpieza de las keywords de las películas}
 
 Las keywords tendrán un papel fundamental en el funcionamiento del sistema. De hecho, como se verá en el Capítulo \ref{chap:creacion}, las recomendaciones se realizarán en base a la similaridad entre películas, y para esta medida se usarán las keywords. Por tanto, se hace necesario analizar el contenido de esta variable, puesto que se realizará un uso extensivo de ella.\\
 
@@ -252,7 +252,7 @@ Los seres humanos nos expresamos de forma muy diferente y probablemente las keyw
 
 El lenguaje de Python es ampliamente utilizado en la disciplina de la ciencia de datos, es por ello que existen numerosas liberías de inestimable ayuda para el NLP. Una de las más conocidas es NLTK \cite{NLTK} (\textbf{N}atural \textbf{L}anguage \textbf{T}ool\textbf{K}it).\\
 
-En este proyecto es importante extraer el significado original de las keywords, es decir, no importa si la keyword es ``drama'' o ``dramático'', ya que significan lo mismo. En este caso utilizamos la librería NLTK, que en concreto implementa una función denominada \texttt{PorterStemmer}\cite{porter}, que es una función que sirve para extraer lexemas de las palabras. Con este paso se consigue extraer la raiz de la palabra para evitar problemas con plurales, etc. En primer lugar se implementa la función\texttt{keywords\_inventory} que recoge las keywords y crea un diccionario para ver en qué palabra queda otra.
+En este proyecto es importante extraer el significado original de las keywords, es decir, no importa si la keyword es ``drama'' o ``dramático'', ya que significan lo mismo. En este caso utilizamos la librería NLTK, que en concreto implementa una función denominada \texttt{PorterStemmer}\cite{porter}, que es una función que sirve para extraer lexemas de las palabras. Con este paso se consigue extraer la raíz de la palabra para evitar problemas con plurales, etc. En primer lugar se implementa la función\texttt{keywords\_inventory} que recoge las keywords y crea un diccionario para ver en qué palabra queda otra.
 
 \begin{lstlisting}[language=Python, caption= Obtención del lexema de cada keywords y creación del diccionario de equivalencia.]
 def keywords_inventory(dataframe, column = 'plot_keywords'):
@@ -343,9 +343,9 @@ df_keywords_cleaned = df_keywords_replacement(df_duplicate_cleaned, keywords_sel
 
 En la sección anterior de la memoria, se han explicado las peculiaridades de trabajar con un dataset que contenga texto, así como la estrategia seguida par reducir la cantidad de keywords. Sin embargo, únicamente hemos agrupado las keywords por su lexema, que es además la forma más simple de realizar esta agrupacion. Por ejemplo, si hubiera dos películas, una con la keyword alien y otra con la keyword extraterrestre, únicamente con el paso anterior seguirían siendo películas diferentes.\\
 
-En esta sección se va un paso más alla. La librería NLTK además de extractores de lexema, incluye un submódulo de corpus. En este caso se utilizará el corpus de WordNet. Consiste en una base de datos léxica de sustantivos, verbos, adjetivos y adverbios en inglés agrupados en conjuntos de sinónimos cognitivos, expresando cada uno un concepto diferente. Se trata de una herramienta con muchísimo potencial para el análisis de texto.\\
+En esta sección se va un paso más allá. La librería NLTK además de extractores de lexema, incluye un submódulo de corpus. En este caso se utilizará el corpus de WordNet. Consiste en una base de datos léxica de sustantivos, verbos, adjetivos y adverbios en inglés agrupados en conjuntos de sinónimos cognitivos, expresando cada uno un concepto diferente. Se trata de una herramienta con muchísimo potencial para el análisis de texto.\\
 
-En este caso concreto, se utilizará el corpus de WordNet \cite{WordNet} implementado en la libería NLTK para sustituir las keywords con menos apariciones por sus sinónimos más frecuentes. Por ejemplo, la keyword extraterrestrial aparece un total de 4 veces. Es posible que sustituirla por alien en esas 4 películas haga que las películas de aliens estén mejor relacionadas, ya que no hay apenas diferencia entre los significados. En concreto, las keywords con menos de 5 apariciones serán sustituidas por su sinónimo más frecuente. Con esto se reemplaza aproximadamente el $6 \%$ de las keywords.
+En este caso concreto, se utilizará el corpus de WordNet \cite{WordNet} implementado en la librería NLTK para sustituir las keywords con menos apariciones por sus sinónimos más frecuentes. Por ejemplo, la keyword extraterrestrial aparece un total de 4 veces. Es posible que sustituirla por alien en esas 4 películas haga que las películas de aliens estén mejor relacionadas, ya que no hay apenas diferencia entre los significados. En concreto, las keywords con menos de 5 apariciones serán sustituidas por su sinónimo más frecuente. Con esto se reemplaza aproximadamente el $6 \%$ de las keywords.
 \begin{lstlisting}[language=Python, caption= Sustitución de las palabras menos frecuentes por sus sinónimos.]
 def test_keyword(word, key_count, threshold):
     """Devuelve si una palabra aparece un número mayor de veces que el umbral señalado
@@ -407,7 +407,7 @@ Siempre es interesante realizar un análisis de las entradas que tienen datos fa
 Existen dos técnicas principales para imputar estos datos:
 
 \begin{itemize}
-    \item Sustitucion promedio: Implica reemplazar los valores faltantes con la media de esa variable en los demás casos. Tiene el beneficio de no cambiar la media de la distribución. Sin embargo, atenúa las correlaciones que implican a la variable imputada.
+    \item Sustitución promedio: Implica reemplazar los valores faltantes con la media de esa variable en los demás casos. Tiene el beneficio de no cambiar la media de la distribución. Sin embargo, atenúa las correlaciones que implican a la variable imputada.
     \item Imputación mediante regresión: Es, por así decirlo, la forma opuesta de realizar la imputación. Imputa una de las variables fijándose en una o varias de las demás. En este caso no se genera cambio en la correlación entre variables pero sí se afecta a la media. Otro problema es que supone que la regresión no tiene un término de error asociado y que es, por tanto, una regresión con $R² = 1$.
 \end{itemize}
 
@@ -505,7 +505,7 @@ for index, row in df_filling[df_filling['plot_keywords'].isnull()].iterrows():
 
 \subsection{Completado mediante regresiones}
 
-Como puede verse en la Figura\ref{fig:corelation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el dataframe:
+Como puede verse en la Figura\ref{fig:corelation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el DataFrame:
 
 \begin{lstlisting}[language=Python, caption = Rellenado de la variable de presupuesto teniendo en cuenta el número de votos.]
 df_filling = variable_linreg_imputation(df_filling, 'gross', 'num_voted_users')

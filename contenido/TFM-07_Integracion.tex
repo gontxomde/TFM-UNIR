@@ -1,3 +1,30 @@
-\chapter{Integración del sistema para hacerlo explotable}\label{chap:api}
+\chapter{Integración del sistema en una API}\label{chap:api}
 
-Por escribir
+Se ha visto que es una regla general en los trabajos de fin de estudios (no únicamente de UNIR, sino en general) orientados al data science y el análisis de datos la no creación de un entorno que podría denominarse productivo. Muchos de estos trabajos se centrar en realizar un análisis de los datos e implementar modelos predictivos, pero siempre en un entorno que podría considerarse ``de laboratorio''. Sin embargo, creemos que un TFE además de ser una forma de finalizar unos estudios, debería ser el inicio de aquello que viene después de ellos; el mundo real.\\
+
+En este caso, el tema del TFE son los sistemas de recomendación de contenido. En este trabajo se ha revisado en primer lugar su necesidad en el entorno digital actual, en el que existen plataformas con muy variado contenido y usuarios que tienen que ser capaces de navegar por él. Además, se ha realizado una revisión teórica de los sistemas de recomendación, habiéndose explicado los principales tipos y sus aplicaciones. El caso de uso concreto que se ha llevado a cabo en este TFE ha sido relacionado con las películas. Se ha realizado un flujo completo de adquisición y preparación de los datos, a partir de diferentes datasets y se ha construido con ellos un sistema de recomendación. El sistema utiliza las palabras clave de cada película, el directos, los actores, el año de lanzamiento y la popularidad de la película, para recomendar a un usuario películas dada una de referencia.\\
+
+Como se ha explicado en el primer párrafo, consideramos que un TFE de desarrollo de sowftware debería estar orientado a una implementación en el mundo real, en el que usuarios reales pudieran hacer uso del mismo. Este es un paso que suele dejarse indicado en los próximos pasos, no siendo así en este proyecto. Se implementará el sistema de recomendación en una REST API en Python utilizando la librería Flask y esta API será llamada por un bot de Telegram para responder a los usuarios.
+
+\section{Telegram}
+
+Telegram es una compañía de mensajería instánea en la nube. Dispone de clientes para la mayoría de plataformas (Android, iOS, Windows Phone, macOS, linux...) y los usuarios pueden intercambiar mensajes, fotos, videos, audio, stickers o archivos de cualquier tipo. Además, la parte del cliente de Telegram es software libre (no así la parte de back-end), aunque en ocasiones la publicación no es inmediata. Como puede deducirse, Telegram es una compañía competidora de Whatsapp, aunque contiene características muy diferentes y atractivas.\\
+\begin{figure}[H]
+    \centering
+    \captionsetup{width=10cm}
+    \includegraphics[width=5cm]{contenido/imagenes/Telegram-logo.jpg}
+\end{figure}
+Entre las innumerables características de Telegram, en este proyecto la de mayor importancia es la posibilidad de crear bots. Los bots de Telegram son aplicaciones de terceros que corren dentro de telegram. Los usuarios pueden interactuar con los bots enviándoles mensajes y comandos. Entre las posibiildades de un bot se encuentran:
+\begin{itemize}
+    \item Obtener notificaciones personalizadas y noticias. Un bot puede actuar como un periódico, enviando contenido relevtante para cada usuario de forma instantanea.
+    \item Integrarse con otros servicios como GMail, GitHub o YouTube, permitiendo al usuario recibir, por ejemplo, notificaciones sobre cambios en sus repositorios.
+    \item Aceptar pagos de usuarios de Telegram, gracias a la posibilidad de un bot de ofrecer servicios de pago.
+    \item Creación de herramientas personalizadas, como alertas, previsiones meteorológicas, control domótico de la casa...
+    \item Creación de juegos tanto de un jugador como para varios jugadores.
+\end{itemize}
+
+En resumen, existen bots para realizar prácticamente cualquier tarea, y en caso de que no exista, es posible crearlo si se dispone de las herramientas y los conocimientos adecuados; además de forma gratuita.\\
+
+Los bots se distinguen de los humanos por su nombre (debe contener ``bot''), por no necesitar un teléfono para crear la cuenta y por no poder iniciar conversaciones con usuarios. Es el usuario quien debe iniciar una conversación con ellos.\\
+
+En este caso particular, se utilizara Telegram como interfaz entre el usuario y el sistema de recomendación.

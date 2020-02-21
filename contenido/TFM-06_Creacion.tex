@@ -20,7 +20,7 @@ Esta estrategia podría ser discutida y probablemente existan estrategias ligera
 
 \subsection{Similaridad}
 
-El primer paso en la construcción del motor de recomendación consiste en definir un criterio que aporte información sobre cómo de parecidas son dos películas. Partiendo de la película seleccionada por el usuario, se toma el director, los actores princpales, los géneros y las keywords de la película y se crea una matriz como la mostrada en \ref{tab:similarity}.
+El primer paso en la construcción del motor de recomendación consiste en definir un criterio que aporte información sobre cómo de parecidas son dos películas. Partiendo de la película seleccionada por el usuario, se toma el director, los actores principales, los géneros y las keywords de la película y se crea una matriz como la mostrada en \ref{tab:similarity}.
 
 \begin{table}[H]
 \centering
@@ -124,7 +124,7 @@ Una vez se tienen las variables con las que se calculará la distancia entre la 
 \begin{lstlisting}[language=Python, caption= Creación de la matriz de coordenadas de las películas.]
 def add_variables(df, REF_VAR):
     """Añade al dataframe de películas las columnas dadas en REF_VAR (que serán el 
-    director, etc de unapelícula) y las inicializa a 0 o 1 dependiendo de si la 
+    director, etc de una película) y las inicializa a 0 o 1 dependiendo de si la 
     película es del mismo director, tiene a ese actor, etc
 
     Args:
@@ -147,7 +147,7 @@ def add_variables(df, REF_VAR):
     return df
 \end{lstlisting}
 
-Con estas dos funciones ya definidas, podemos crear la función \texttt{recommend}, que será la que replace la selección de las $N$ películas más cercanas a la dada por el usuario. La métrica utilizada para evaluar cuales son las películas más cercanas es la distancia euclídea.
+Con estas dos funciones ya definidas, podemos crear la función \texttt{recommend}, que será la que realice la selección de las $N$ películas más cercanas a la dada por el usuario. La métrica utilizada para evaluar cuales son las películas más cercanas es la distancia euclídea.
 
 \begin{lstlisting}[language=Python, caption=Obtención de las 30 mejores películas dada una por el usuario.]
 def recommend(df, id_entry, N = 31):
@@ -395,4 +395,4 @@ def find_similarities(df, id_entry, del_sequels = True, verbose = False, N = 31)
 
 \section{Resumen}
 
-En este capítulo, uno de los más importantes del proyecto, se ha creado el sistema de recomendación en sí, creando la medida de similaridad entre películas y realizando la seleccion de las mejores y se ha explicado el motivo de la inclusión de cada criterio de selección. Además, se ha mostrado un resultado del sistema a modo de ejemplo. La parte de explotación del resultado será tratada en el siguiente capítulo, en el que se introducirá el sistema en una API, abriendo la posibilidad de desplegar la solución en un entorno productivo utilizable por usuarios reales.
+En este capítulo, uno de los más importantes del proyecto, se ha creado el sistema de recomendación en sí, creando la medida de similaridad entre películas y realizando la selección de las mejores y se ha explicado el motivo de la inclusión de cada criterio de selección. Además, se ha mostrado un resultado del sistema a modo de ejemplo. La parte de explotación del resultado será tratada en el siguiente capítulo, en el que se introducirá el sistema en una API, abriendo la posibilidad de desplegar la solución en un entorno productivo utilizable por usuarios reales.
