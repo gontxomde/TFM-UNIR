@@ -16,6 +16,7 @@
 \renewcommand*{\cite}[1]{\parencite{#1}}
 % \apa{XXX} -> Author (Year)
 \newcommand*{\apa}[1]{\citeauthor{#1} (\citeyear{#1})}
+\renewcommand{\bibname}{Bibliografía}
 
 
 % Conveniencia: negrita con comando \n (para preservar identado de tablas con negrita)  

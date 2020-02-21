@@ -42,7 +42,7 @@ El conjunto de datos posee metadatos sobre las películas, como palabras clave, 
 El proceso que se seguirá para la creación del sistema de recomendación se muestra en la Figura \ref{fig:process} y consistirá de los siguientes pasos:
 \begin{enumerate}
     \item Adquisición de los datos y limpieza de los mismos.
-    \item Análisis preliminar avanzado de los datos.
+    %\item Análisis preliminar avanzado de los datos.
     \item Creación del sistema de recomendación.
     \item Creación de la API e integración en el bot de Telegram.
 \end{enumerate}
@@ -53,11 +53,11 @@ El proceso que se seguirá para la creación del sistema de recomendación se mu
 %%%                  %%%
 \section{Estructura de la memoria}\label{sec:estructura}
 
-El trabajo, como se ha descrito en los capítulos anteriores, tiene como objetivo la creación de un sistema de recomendación de películas, aunque se tratará de incluir en el mismo el flujo \textit{end to end} de tratamiento de la información. El trabajo se estructurará en diferentes capítulos, contieniendo cada uno de ellos una de las partes del flujo. Los capítulos que se incluirán en este trabajo serán los siguientes:
+El trabajo, como se ha descrito en los capítulos anteriores, tiene como objetivo la creación de un sistema de recomendación de películas, aunque se tratará de incluir en el mismo el flujo \textit{end to end} de tratamiento de la información. El trabajo se estructurará en diferentes capítulos, conteniendo cada uno de ellos una de las partes del flujo. Los capítulos que se incluirán en este trabajo serán los siguientes:
 
 \begin{itemize}
     \item Estructura de los datos a utilizar y preprocesado de los mismos. En este capítulo se realizará una presentación y explicación de los datos de los que se dispone, de forma que se entiendan los siguientes pasos seguidos.
-    \item \textit{Preliminary Data Analysis}. Caso de uso de análisis de datos para resolución de preguntas de negocio. Al trabajar con un conjunto de datos siempre es importante realizar un análisis previo, de forma que pueda entenderse la estructura de los mismos. También se verá la utilidad de disponer de un conjunto de datos relativamente grande a la hora de responder a preguntas que pueden surgir en relación con la informacion contenida en los mismos.
+    %\item \textit{Preliminary Data Analysis}. Caso de uso de análisis de datos para resolución de preguntas de negocio. %Al trabajar con un conjunto de datos siempre es importante realizar un análisis previo, de forma que pueda %entenderse la estructura de los mismos. También se verá la utilidad de disponer de un conjunto de datos %relativamente grande a la hora de responder a preguntas que pueden surgir en relación con la informacion contenida %en los mismos.
     \item Sistemas de recomendación. Se realizará una explicación de la teoría que existe tras estos sistemas y los diferentes tipos que existen. Se creará el sistema de recomendación.
     \item Integración del sistema en una API y creación de un chatbot. Es importante que nuestro sistema de recomendación sea explotable por los usuarios, de nada sirve tener un buen sistema de recomendación si no puede ser usado. Se explicará la creación de un bot de Telegram y cómo crear una API que pueda ser llamada por el bot.
     \item Próximos pasos. Finalmente, se realizará un repaso de lo desarrollado en el trabajo y se propondrán puntos en los que mejorar el sistema que no hayan podido implementarse por algún motivo.
