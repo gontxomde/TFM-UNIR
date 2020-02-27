@@ -1,1 +1,56 @@
 \chapter{Sistemas de recomendación. Revisión teórica.}\label{chap:recom}
+
+Los sistemas de recomendación son un tipo de filtros de información, que buscan predecir la puntuación (preferencia) que un usuario daría a un objeto en particular. Su principal uso está relacionado con aplicaciones comerciales.\\
+
+Los sistemas de recomendación son utilizados en diversas areas, muchas veces aplicados como recomendadores de productos en servicios como Amazon, generadores de colas de reproducción en servicios de música y video (Netflix, YouTube, Spotify), o recomendadores de contenido como en el caso de Twitter o la mayoría de veriones digitales de periódicos. Además, hay sistemas de recomendación de tipos menos habituales, como por ejemplo los reocmendadores de parejas que pueden encontrarse en aplicaciones como Tinder o Lovoo.\\
+
+La mayoría de aplicaciones se basan en uno o ambos tipos de sistemas de filtrado principales:
+
+\begin{itemize}
+    \item Filtrado colaborativo: Este tipo de filtros utilizan el feedback dado por el usuario y el resto de usuarios en el pasado sobre el conjunto de items, con el fin de poder predecir qué item puede ser valorado positivamente por el usuario. Un ejemplo sería una tienda que utiliza las valoraciones de un usuario concreto y del resto de usuarios para recomendar a ese usuario concreto los productos que predicen serán valorados con la mejor puntuación de entre aquellos que aun no figuran en su historial de compra.
+    \item Filtrado basado en contenidos: Este tipo de filtros utilizan metadatos de los items en cuestión para inferir la relación entre un usuario y esa metainformación. Sería por ejemplo un sistema en una tienda que recomienda items a un usuario pero sin tener en cuenta su feedback, simplemente buscando productos similares (por ejemplo, de la misma sección, rango de precio...)
+\end{itemize}
+
+\section{El premio Netflix}
+
+Como ejemplo para mostrar la importancia que tienen para las empresas los sitemas de recomendación se va a hacer una presentación de lo que fue el Premio Netflix. Dicho premio fue una competición abierta para generar un algoritmo de filtrado colaborativo para predecir las puntuaciones de películas que darían los usuarios, basándose en puntuaciones anteriores, sin mayor información sobre los usuarios o las películas, esto es, sin saber la película puntuada más allá de su id.\\
+
+La competición fue organizada por Netlfix, una compañía que por aquél entonces se dedicaba al alquiler de películas y estaba abierta a cualquier persona no relacionada con Netflix. En su edición del año 2009, contó con un premio de 1 millón de dólares, que fue ganado por el equipo de \textit{BellKor's Pragmatic Chaos} \cite{netflix}, cuyo algoritmo mejoró el  error en las puntuaciones dadas por el algoritmo de Netflix alrededor de un $10 \%$.\\
+
+Netflix proporcionó un dataset de entrenamiento de 100 millones de registros, dados por $480000$ usuarios a un total de $18000$ películas. Cada registro es una $4-$tupla de la forma $(user,\ movie,\ date\ of\ grade,\ grade)$. El usuario y la película son id enteros mientras que las puntuaciones van de $1$ a $5$ (enteros).\\
+
+El dataset de test tenía alrededor de 3 millones de registros, usándose la mitad para determinar a los ganadores y la otra mitad para actualizar las tablas de líderes. Como es norma, las puntuaciones contenidas en este dataset de test únicamente eran conocidas por el jurado, con el fin de evitar un overfitting a los datos de test.\\
+
+Este cuantioso premio tuvo a varios grupos formados por expertos en el terreno durante varios años intentando conseguir el mejor algoritmo posible. Es evidente que un premio de esas características para un algoritmo de filtrado significa que es un área de vital importancia para la empresa organizadora, Netlfix.
+
+\newpage
+
+\section{Tipos de sistemas de recomendación}
+
+\subsection{Filtrado colaborativo}
+
+Una forma de construir los sistemas de colaboración son los filtros colaborativos. Se basan en la hipótesis de que los usuarios que han estado de acuerdo en el pasado lo estarán en el futuro, y que les gustarán los mismos ítems. El sistema genera recomendaciones usando información sobre los perfiles de votación de diferentes usuarios. Localizando usuarios con un histórico de puntuaciones similar, generan recomendaciones usando un vecindario. Las ventajas del filtrado colaborativo es que no se apoyan en contenido analizable por una máquina, por lo que pueden usarse para recomendar ítems complejos como películas o parejas sin necesidad de entender el ítem en sí, es decir, sin realizar una abstracción sobre cada una de las películas.\\
+
+Los filtros colaborativos tienen tres problemas principales:
+
+\begin{itemize}
+    \item Comienzo en frío: Para un nuevo usuario o ítem, no hay suficientes datos como para realizar recomendaciones precisas.
+    \item Sparsity: Por norma genera, el número de ítems disponibles en una tienda o en una plataforma de contenido es muy grande, de forma que incluso los usuarios más activos habrán realizado valoraciones sobre un conjunto muy pequeño de ítems.
+    \item Escalabilidad: En muchos entornos de uso hay millones de productos y usuarios, por lo que se necesita mucho poder de computación para realizar recomendaciones.
+\end{itemize}
+
+\subsection{Filtrado basado en contenido}
+
+Los métodos basados en filtrado basado en contenido toman como punto de partida la descripción de cada item y el perfil de las preferencias del usuario. Este tipo de métodos son más adecuados para situaciones en las que se tienen metadatos de los items, pero no de los usuarios. Los recomendadores basados en contenido tratan la recomendación como un problema de clasificación y usan un clasificador para las preferencias del usuario.\\
+
+En estos sistemas, se usan keywords para describir los items y se crea un perfil de usuario para ver el tipo de objetos preferidos por el usuario. Estos sistemas tratan de buscar ítems parecidos a aquellos que el usuario ya ha indicado que le gustan.\\
+
+Los sistemas basados en contenido tienen un problema básico. El principal problema es que al recomendar ítems similares, es probable que estos se solapen demasiado con los que ya han gustado al usuario. Por ejemplo, en el caso en el que un usuario compre una raqueta de tenis, probablemente los productos más similares en términos de contenido sean otras raquetas. Sin embargo, parece inmediato pensar que una persona que acaba de comprar una raqueta probablemente no desee comprar otra diferente. Es por esto que la forma más habitual de implementar estos sistemas es mediante algún método híbrido que combine filtrado colaborativo con filtrado basado en contenido. Una de las ventajas de estos filtros es que no tienen el problema del comienzo en frío del filtrado colaborativo, ya que un producto nuevo únicamente ha de contener metadatos sobre él mismo para poder ser recomendado. El ser un producto nuevo no produce, por tanto, ninguna desventaja frente a productos más antiguos.\\
+
+\section{El sistema de este proyecto}
+
+En este proyecto, dada la naturaleza de los datos disponibles, se implementará un sistema basado en contenido. La premisa inicial es recomendar al usuario películas similares a la introducida. Por tanto, el problema de dar al usuario opciones parecidas ya se contempla desde el inicio. Además, se considera que las películas en general no se parecen tanto unas a otras como podrían hacerlo varios ítems de una tienda online.\\
+
+Se usará un conjunto de datos consistente en metadatos sobre películas, entre los que se encuentran su año de publicación, su director y actores principales y keywords que describen la misma. Utilizando estos datos se establecerá una medida de similaridad entre películas y luego se ordenaran de acuerdo a heurísticas que tratarán de buscar aquellas películas que pueden ser preferidas por el usuario. Estas heurísticas consistirán en medidas de la popularidad de las películas y de similitud del año de lanzamiento, entendiendo que de entre las más parecidas, se preferirán aquellas coetáneas a la dada por el usuario y que además sean populares.
+
+

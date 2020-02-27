@@ -9,11 +9,11 @@
 
 
 % Bibliografía (no establecido por UNIR, cosecha propia)
-\usepackage[bibencoding=utf8,maxcitenames=1,backend=biber,bibstyle=authoryear,citestyle=apa,sorting=ynt]{biblatex}
+\usepackage[bibencoding=utf8,maxcitenames=1,backend=biber,bibstyle=numeric,citestyle=numeric,sorting=ynt]{biblatex}
 \addbibresource[location=local]{contenido/TFM-biblio.bib}
 %\AtEveryBibitem{[\printfield{labelnumber}]\addspace}
 % \cite{xxx} -> (Author, Year)
-\renewcommand*{\cite}[1]{\parencite{#1}}
+%\renewcommand*{\cite}[1]{\parencite{#1}}
 % \apa{XXX} -> Author (Year)
 \newcommand*{\apa}[1]{\citeauthor{#1} (\citeyear{#1})}
 \renewcommand{\bibname}{Bibliografía}

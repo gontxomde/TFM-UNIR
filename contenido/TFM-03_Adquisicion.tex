@@ -46,7 +46,7 @@ Para la creación del sistema de recomendación de películas basado en contenid
 \newpage
 \section{Importación de datos de películas}
 
-El primer paso en la etapa de adquisición de los datos consiste en leer ambos ficheros (en formato csv) y obtener los DataFrame de Pandas correspondintes. Las columnas genres, keywords, production\_countries, production\_companies, spoken\_languages, cast y crew están en formato json en origen. Es por ello que en las funciónes de lectura de los datos tienen un trato especial. Las funciones implementadas son las siguientes:
+El primer paso en la etapa de adquisición de los datos consiste en leer ambos ficheros (en formato csv) y obtener los DataFrame de Pandas correspondientes. Las columnas genres, keywords, production\_countries, production\_companies, spoken\_languages, cast y crew están en formato json en origen. Es por ello que en las funciónes de lectura de los datos tienen un trato especial. Las funciones implementadas son las siguientes:
 
 \begin{lstlisting}[language=Python, caption=Lectura de los datos del fichero de películas.]
 import json
@@ -73,7 +73,7 @@ def load_credits(path):
     Args:
         path (str): Ruta hasta el archivo de tmdb_5000_credits.csv
     Returns:
-        pd.DataFrame: [description]
+        pd.DataFrame: Dataframe de pandas con la información del csv
     """
     df = pd.read_csv(path)
     json_columns = ['cast', 'crew']
@@ -385,7 +385,7 @@ Conviene recordar que el objetivo de este proyecto es crear un sistema de recome
 \begin{figure}[H]
     \centering
     \captionsetup{width=12cm}
-    \includegraphics[height=10cm]{./contenido/imagenes/keyword_cleaning.png}
+    \includegraphics[height=9.3cm]{./contenido/imagenes/keyword_cleaning.png}
 \caption{Repeticiones de las keywords antes y después de la limpieza.}
 \label{fig:key_cleaning}
 \end{figure}
@@ -418,7 +418,7 @@ En la Figura\ref{fig:correlation} se muestra la matriz de correlación entre las
     \captionsetup{width=12cm}
     \includegraphics[height=10cm]{./contenido/imagenes/correlation.png}
 \caption{Correlación entre las variables del dataset}
-\label{fig:corelation}
+\label{fig:correlation}
 \end{figure}
 
 En este caso, se utilizarán varios tipos de imputación, algunos adecuados al dominio concreto del problema. Es necesario resaltar que únicamente se imputarán aquellas variables que sean necesarias para la creación propiamente dicha del recomendados. En la Figura \ref{fig:completion} se muestran los porcentajes de completitud de cada una de las variables que restan.
@@ -505,7 +505,7 @@ for index, row in df_filling[df_filling['plot_keywords'].isnull()].iterrows():
 
 \subsection{Completado mediante regresiones}
 
-Como puede verse en la Figura\ref{fig:corelation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el DataFrame:
+Como puede verse en la Figura\ref{fig:correlation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el DataFrame:
 
 \begin{lstlisting}[language=Python, caption = Rellenado de la variable de presupuesto teniendo en cuenta el número de votos.]
 df_filling = variable_linreg_imputation(df_filling, 'gross', 'num_voted_users')

@@ -271,7 +271,7 @@ def selection_criteria(title_main, ref_year, title, year, score, ratio):
 \end{lstlisting}
 
 Llegados a este punto, supóngase que el usuario ha elegido la película Harry Potter y la Piedra Filosofal. Sin ejecutar el recomendador y sin sonar demasiado raro, parece que las películas que recomendará el sistema, si no se modifica lo dicho hasta ahora, serán las demás películas de Harry Potter, ya que tendrán las mismas keywords o muy parecidas, compartirán actores y serán de la misma época. Sin embargo, estas películas sean probablemente conocidas por el usuario. Por tanto, se implementa la funcion \texttt{sequel}, que trata de ver, mediante lógica difusa y medidas como la distancia Levenshtein \cite{levenshtein}, que mide la distancia entre dos palabras en términos de los cambios necesarios para llegar de una a otra. La función \texttt{sequel}\ref{lst:sequel} servirá para filtrar los resultados dados al usuario.
-\begin{lstlisting}[language=Python, caption=Determinación de si dos películas son o no secuelas y eliminarlas.]
+\begin{lstlisting}[language=Python, label={lst:sequel},caption=Determinación de si dos películas son o no secuelas y eliminarlas.]
 def sequel(title_1, title_2):   
     """Compara los títulos de dos películas y devuelve si son similares o no
 
