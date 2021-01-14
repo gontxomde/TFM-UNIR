@@ -505,7 +505,7 @@ for index, row in df_filling[df_filling['plot_keywords'].isnull()].iterrows():
 
 \subsection{Completado mediante regresiones}
 
-Como puede verse en la Figura\ref{fig:correlation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\rec{lst:linreg} se rellena el DataFrame:
+Como puede verse en la Figura\ref{fig:correlation} hay variables bastante correlacionadas, como la recaudación y el número de usuarios que votaron una película. Esto se entiende porque normalmente las películas con mayor presupuesto son también las que más invierten en marketing. Mediante la función implementada en el Código\ref{lst:linreg} se rellena el DataFrame:
 
 \begin{lstlisting}[language=Python, caption = Rellenado de la variable de presupuesto teniendo en cuenta el número de votos.]
 df_filling = variable_linreg_imputation(df_filling, 'gross', 'num_voted_users')
