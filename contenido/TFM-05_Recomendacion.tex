@@ -1,4 +1,4 @@
-\chapter{Sistemas de recomendación. Revisión teórica.}\label{chap:recom}
+\chapter{Marco teórico: Sistemas de recomendación}\label{chap:recom}
 
 Los sistemas de recomendación son un tipo de filtros de información, que buscan predecir la puntuación (preferencia) que un usuario daría a un objeto en particular. Su principal uso está relacionado con aplicaciones comerciales.\\
 
@@ -47,9 +47,25 @@ En estos sistemas, se usan keywords para describir los items y se crea un perfil
 
 Los sistemas basados en contenido tienen un problema básico. El principal problema es que al recomendar ítems similares, es probable que estos se solapen demasiado con los que ya han gustado al usuario. Por ejemplo, en el caso en el que un usuario compre una raqueta de tenis, probablemente los productos más similares en términos de contenido sean otras raquetas. Sin embargo, parece inmediato pensar que una persona que acaba de comprar una raqueta probablemente no desee comprar otra diferente. Es por esto que la forma más habitual de implementar estos sistemas es mediante algún método híbrido que combine filtrado colaborativo con filtrado basado en contenido. Una de las ventajas de estos filtros es que no tienen el problema del comienzo en frío del filtrado colaborativo, ya que un producto nuevo únicamente ha de contener metadatos sobre él mismo para poder ser recomendado. El ser un producto nuevo no produce, por tanto, ninguna desventaja frente a productos más antiguos.\\
 
+\section{Sistemas híbridos}\label{sec:hibridos}
+
+Como se ha visto hasta ahora, existen dos estrategias principales a la hora de crear un sistema de recomendación, los sistemas basados en contenido y los sistemas basados en filtrado colaborativo. Los sistemas de recomendación híbridos tratan de combinar lo mejor de ambas estrategias. Estos sistemas combinan estrategias complementarias con el fin de potenciar las ventajas de cada estrategia, enmascarando sus desventajas \cite{CanoMorisio2017}.\\
+
+Hay muchas formas de combinar las estrategias de varios sistemas de recomendación. Tal y como puede encontrarse en \cite{Burke2002}, algunas de estas formas son:
+
+\begin{itemize}
+    \item Ponderados: Es una de las formas más intuitivas. Los sistemas funcionan por separado y finalmente se establece un peso a la puntuación de cada uno de los sistemas para combinarlas.
+    \item Conmutados: Se definen a priori unas reglas en función de las cuales se decide en cada caso si se usa un tipo de estrategia u otro.
+    \item Hay un algoritmo final que decide las recomendaciones y cada una de las estrategias se utiliza como un generador de atributos que serán la entrada de este algoritmo final.
+    \item En cascada: Un recomendador refina las recomendaciones realizadas por el otro.
+\end{itemize}
+
+
 \section{El sistema de este proyecto}
 
 En este proyecto, dada la naturaleza de los datos disponibles, se implementará un sistema basado en contenido. La premisa inicial es recomendar al usuario películas similares a la introducida. Por tanto, el problema de dar al usuario opciones parecidas ya se contempla desde el inicio. Además, se considera que las películas en general no se parecen tanto unas a otras como podrían hacerlo varios ítems de una tienda online.\\
+
+Además, usaremos una característica de los sistemas en cascada, aunque el filtrado final no lo hace un sistema de recomendación como tal, sino un algoritmo para puntuar las recomendaciones en base a heurísticas predefinidas, tal y como se indica en la \autoref{sec:trabajodesarrollado}.\\
 
 Se usará un conjunto de datos consistente en metadatos sobre películas, entre los que se encuentran su año de publicación, su director y actores principales y keywords que describen la misma. Utilizando estos datos se establecerá una medida de similaridad entre películas y luego se ordenaran de acuerdo a heurísticas que tratarán de buscar aquellas películas que pueden ser preferidas por el usuario. Estas heurísticas consistirán en medidas de la popularidad de las películas y de similitud del año de lanzamiento, entendiendo que de entre las más parecidas, se preferirán aquellas coetáneas a la dada por el usuario y que además sean populares.
 

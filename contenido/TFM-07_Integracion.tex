@@ -2,9 +2,9 @@
 
 Se ha visto que es una regla general en los trabajos de fin de estudios (no únicamente de UNIR, sino en general) orientados al data science y el análisis de datos la no creación de un entorno que podría denominarse productivo. Muchos de estos trabajos se centrar en realizar un análisis de los datos e implementar modelos predictivos, pero siempre en un entorno que podría considerarse ``de laboratorio''. Sin embargo, creemos que un TFE además de ser una forma de finalizar unos estudios, debería ser el inicio de aquello que viene después de ellos; el mundo real.\\
 
-En este caso, el tema del TFE son los sistemas de recomendación de contenido. En este trabajo se ha revisado en primer lugar su necesidad en el entorno digital actual, en el que existen plataformas con muy variado contenido y usuarios que tienen que ser capaces de navegar por él. Además, se ha realizado una revisión teórica de los sistemas de recomendación, habiéndose explicado los principales tipos y sus aplicaciones. El caso de uso concreto que se ha llevado a cabo en este TFE ha sido relacionado con las películas. Se ha realizado un flujo completo de adquisición y preparación de los datos, a partir de diferentes datasets y se ha construido con ellos un sistema de recomendación. El sistema utiliza las palabras clave de cada película, el directos, los actores, el año de lanzamiento y la popularidad de la película, para recomendar a un usuario películas dada una de referencia.\\
+En este caso, el tema del TFE son los sistemas de recomendación de contenido. En este trabajo se ha revisado en primer lugar su necesidad en el entorno digital actual, en el que existen plataformas con muy variado contenido y usuarios que tienen que ser capaces de navegar por él. Además, se ha realizado una revisión teórica de los sistemas de recomendación, habiéndose explicado los principales tipos y sus aplicaciones. El caso de uso concreto que se ha llevado a cabo en este TFE ha sido relacionado con las películas. Se ha realizado un flujo completo de adquisición y preparación de los datos, a partir de diferentes datasets y se ha construido con ellos un sistema de recomendación. El sistema utiliza las palabras clave de cada película, el director, los actores, el año de lanzamiento y la popularidad de la película, para recomendar a un usuario películas dada una de referencia.\\
 
-Como se ha explicado en el primer párrafo, consideramos que un TFE de desarrollo de sowftware debería estar orientado a una implementación en el mundo real, en el que usuarios reales pudieran hacer uso del mismo. Este es un paso que suele dejarse indicado en los próximos pasos, no siendo así en este proyecto. Se implementará el sistema de recomendación en una REST API en Python utilizando la librería Flask y esta API será llamada por un bot de Telegram para responder a los usuarios.
+Como se ha explicado en el primer párrafo, consideramos que un TFE de desarrollo de software debería estar orientado a una implementación en el mundo real, en el que usuarios reales pudieran hacer uso del mismo. Este es un paso que suele dejarse indicado en los próximos pasos, no siendo así en este proyecto. Se implementará el sistema de recomendación en una REST API en Python utilizando la librería Flask y esta API será llamada por un bot de Telegram para responder a los usuarios.
 
 \section{Telegram}
 
@@ -13,6 +13,7 @@ Telegram es una compañía de mensajería instánea en la nube. Dispone de clien
     \centering
     \captionsetup{width=7cm}
     \includegraphics[width=5cm]{contenido/imagenes/Telegram-logo.jpg}
+    \caption{Logo de la aplicación Telegram}
 \end{figure}
 Entre las innumerables características de Telegram, en este proyecto la de mayor importancia es la posibilidad de crear bots. Los bots de Telegram son aplicaciones de terceros que corren dentro de telegram. Los usuarios pueden interactuar con los bots enviándoles mensajes y comandos. Entre las posibiildades de un bot se encuentran:
 \begin{itemize}
@@ -29,13 +30,13 @@ Los bots se distinguen de los humanos por su nombre (debe contener ``bot''), por
 
 En este caso particular, se utilizara Telegram como interfaz entre el usuario y el sistema de recomendación, tanto por sus cualidades como por su relativa facilidad de uso.\\
 
-Para crear el bot, simplemente hay que iniciar una conversación con el bot \textit{@botfather} y enviar el comando \textit{$\backslash$newbot}, nos pedirá un nombre para el bot y un nombre de usuario, que tendrá que terminar en ``bot''. Una vez realizados estos pasos, se proporcionará el token que permite realizar modificaciones en el bot e interactuar a través de la API de Telegram. En la Figura \ref{fig:botfather} se muestra el proceso de creación del bot.
+Para crear el bot, simplemente hay que iniciar una conversación con el bot \textit{@botfather} y enviar el comando \textit{$\backslash$newbot}, nos pedirá un nombre para el bot y un nombre de usuario, que tendrá que terminar en ``bot''. Una vez realizados estos pasos, se proporcionará el token que permite realizar modificaciones en el bot e interactuar a través de la API de Telegram. En la \autoref{fig:botfather} se muestra el proceso de creación del bot.
 
 \begin{figure}[H]
     \centering
     \captionsetup{width=8cm}
     \includegraphics[width=6cm]{contenido/imagenes/botfather.png}
-    \caption{Creación de un bot en Telegram mediante una conversación con el usuario \textit{@botfather}.}
+    \caption{Creación de un bot en Telegram mediante una conversación con el usuario \textit{@botfather}. Se le da un nombre de bot y un nombre de usuario único y nos devuelve el token que tendremos que usar en la API para poder enviar mensajes a través de este bot.}
     \label{fig:botfather}
 \end{figure}
 
@@ -44,7 +45,7 @@ El funcionamiento del bot es el siguiente (puede obtenerse documentación más d
 
 \begin{enumerate}
     \item Se crea un webhook para que el bot envíe los mensajes que reciba a la URL que le proporcionemos, utilizando el siguiente método de la API: \url{https://api.telegram.org/bot<token>/setWebHook?url=<url_API>/telegram/}. De esta forma, cada vez que el bot reciba un mensaje, lo enviará a la URL de la API en formato JSON, para que la repuesta se procese.
-    \item Se procesa el mensaje en la API creada (esta parte se detallará en la Sección \ref{sec:API}.
+    \item Se procesa el mensaje en la API creada (esta parte se detallará en la \autoref{sec:API}).
     \item Una vez la API ha procesado la petición del usuario y tiene la respuesta a enviar, se ejecuta la siguiente petición a la API de Telegram: \url{https://api.telegram.org/bot<token>/sendMessage?chat_id=<chat_id>&parse_mode=Markdown& text=<answer>}.
 \end{enumerate}
 
@@ -54,7 +55,7 @@ Con estos simples pasos es posible crear un usuario de Telegram con el que cualq
 
 En la sección anterior se ha descrito de forma detallada el funcionamiento del chatbot desde el punto de vista de la API de Telegram, habiéndose explicado el funcionamiento de los bots en general y los pasos a seguir para crear un chatbot en esta plataforma. En esta sección se abordará el otro punto de vista, el de la API creada para implementar el sistema de recomendación.\\
 
-Flask es un micro framework web escrito en Python para crear aplicaciones web, es decir, páginas dinámicas, API, etc. Existen alternativas en Python como Django, que han sido descartados por ser demasiado complejos, en este caso se necesita crear una API relativamente sencila. Es un framework rpápido y sencillo.
+Flask \cite{wiki:FlaskHelloWorld} es un micro framework web escrito en Python para crear aplicaciones web, es decir, páginas dinámicas, API, etc. Existen alternativas en Python como Django, que han sido descartados por ser demasiado complejos, en este caso se necesita crear una API relativamente sencila. Es un framework rpápido y sencillo.
 
 \begin{figure}[H]
     \centering
@@ -66,7 +67,7 @@ Mediante Flask se creará un servicio web que podrá ser llamado por el bot de T
 
 El ``hola mundo'' de Flask es el siguiente:
 
-\begin{lstlisting}[language=Python, caption= Aplicación Web básica creada con Flask \cite{wiki:FlaskHelloWorld}.]
+\begin{lstlisting}[language=Python, caption= Aplicación Web básica creada con Flask.]
 from flask import Flask
 app = Flask(__name__)
 
@@ -82,7 +83,7 @@ Así, se tendría una aplicación web que en el puerto $8000$ devolvería ``Hell
 
 La API se ejecutará en una Raspberry PI, debido a las ventajas que tiene en términos de coste frente a un servidor. Es de esperar que el servicio no tenga demasiadas solicitudes, por lo que tampoco tendrá problemas de volumen de peticiones. El problema es hacer que la API esté disponible a través de una URL. Para ello, dado que no se dispone de una IP estática ni de la posibilidad de abrir los puertos en el router, se utiliza el servicio \href{https://ngrok.com/}{Ngrok}. Ngrok es un servicio gratuito que publica un determinado puerto de localhost a través de una URL.\\
 
-Una vez explicado el funcionamiento, en el Cödigo \ref{lst:API}
+Una vez explicado el funcionamiento, en el \autoref{lst:API}
 
 \begin{lstlisting}[language=Python, label = {lst:API}, caption= Creación de la API del sistema de recomendación en Python usando Flask.]
 import requests
@@ -166,7 +167,7 @@ if __name__ =='__main__':
     app.run(port = 8000)
 \end{lstlisting}
 
-En el Capítulo \ref{chap:creacion} se finalizó teniendo un sistema de recomendación que dado el id de una película, obtenía las películas recomendadas. Ésto presenta un claro problema, ya que el usuario final no conocerá los ids, ya que son un identificador interno de la aplicación. Para obtener el id de una película a partir del mensaje del usuario se utiliza una estrategia similar a la seguida para saber si dos películas son secuelas o no. Utilizando lógica difusa y la distancia Levenshtein se compara la cadena de texto dada por el usuario con los títulos de las películas y se ordenan según su parecido. Si se supera un umbral determinado, se infiere que el título dado por el usuario se corresponde con el de mayor puntuación, y se buscan las recomendaciones utilizando ese id.
+En el \autoref{chap:creacion} se finalizó teniendo un sistema de recomendación que dado el id de una película, obtenía las películas recomendadas. Esto presenta un claro problema, ya que el usuario final no conocerá los ids, ya que son un identificador interno de la aplicación. Para obtener el id de una película a partir del mensaje del usuario se utiliza una estrategia similar a la seguida para saber si dos películas son secuelas o no. Utilizando lógica difusa y la distancia Levenshtein se compara la cadena de texto dada por el usuario con los títulos de las películas y se ordenan según su parecido. Si se supera un umbral determinado, se infiere que el título dado por el usuario se corresponde con el de mayor puntuación, y se buscan las recomendaciones utilizando ese id.
 
 \begin{lstlisting}[language=Python, label = {lst:API}, caption= Búsqueda del id de la película dada por el usuario.]
     @staticmethod
@@ -204,7 +205,7 @@ En el Capítulo \ref{chap:creacion} se finalizó teniendo un sistema de recomend
 
 \section{Resultados obtenidos}
 
-En la Figura\ref{fig:TelegramResults} se muestran algunos ejemplos de conversaciones del chatbot de Telegram en las que el usuario aporta el título de una Película, y de una forma relativamente rápida ($\sim 10\ s$) el chatbot da las recomendaciones.\\
+En la \autoref{fig:TelegramResults} se muestran algunos ejemplos de conversaciones del chatbot de Telegram en las que el usuario aporta el título de una Película, y de una forma relativamente rápida ($\sim 10\ s$) el chatbot da las recomendaciones.\\
 
 
 \begin{figure}[H]
@@ -233,7 +234,7 @@ En la Figura\ref{fig:TelegramResults} se muestran algunos ejemplos de conversaci
   \caption{Recomendación para El caso Bourne}
   \label{fig:sc4}
 \end{subfigure}
-\caption{Ejemplos de recomendaciones de películas dadas por el chatbot de Telegram.}
+\caption{Ejemplos de recomendaciones de películas dadas por el chatbot de Telegram. Le damos el título de una película y nos devuelve 5 recomendaciones ordenadas. Dado que el título indicado puede contener erratas, trata de buscar el título más similar al dado en términos de distancia Levenshtein}
 \label{fig:TelegramResults}
 \end{figure}
 
@@ -241,7 +242,7 @@ En este tipo de proyectos, resulta complicado evaluar los resultados. La calidad
 
 \section{Código utilizado}
 
-A lo largo del proyecto se ha ido adjuntando el código utilizado para cada una de las tareas, ya que creemos que resulta interesante conocer la estrategia seguida para tarea. Sin embargo, lo que se ha adjuntado son piezas de un Jupyter Notebook que genera el sistema de recomendación de forma interactiva (Apéndice \ref{app:notebook}. El código real se encuentra organizado en diferentes clases (preprocesado, imputación, recomendador, API...) para tener una estructura más organizada. El código puede consultarse en el repositorio de GitHub \url{https://github.com/gontxomde/RecommendationEngine} con una pequeña guia de despliegue y uso.\\
+A lo largo del proyecto se ha ido adjuntando el código utilizado para cada una de las tareas, ya que creemos que resulta interesante conocer la estrategia seguida para tarea. Sin embargo, lo que se ha adjuntado son piezas de un Jupyter Notebook que genera el sistema de recomendación de forma interactiva (\autoref{app:notebook}. El código real se encuentra organizado en diferentes clases (preprocesado, imputación, recomendador, API...) para tener una estructura más organizada. El código puede consultarse en el repositorio de GitHub \url{https://github.com/gontxomde/RecommendationEngine} con una pequeña guia de despliegue y uso.\\
 
 De la misma forma, a lo largo del proyecto, se han incluido en las funciones los denominados docstrings, que son formas estándar de definir el uso y los argumentos de una función en Python. La finalidad del uso de estos docstrings, además de hacer el código legible, es posibilitar el uso de Sphinx. Sphinx es un software que permite generar la documentación del código de forma automática, generando un documento html o latex fácilmente consultable. Además de en el repositorio antes mencionado, la documentación de la librería creada en este proyecto puede consultarse en el repositorio anteriormente mencionado.\\
 

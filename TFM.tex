@@ -59,17 +59,32 @@
         \tableofcontents    % Índice
         \clearpage
         \include{contenido/TFM-00_Abstract}  %Abtract
-        \listoffigures      % Índice de imagenes
+        %\listoffigures      % Índice de imagenes
+        {%
+        \let\oldnumberline\numberline%
+        \renewcommand{\numberline}{\figurename~\oldnumberline}%
+        \listoffigures%
+        }
         \newpage
         \thispagestyle{empty}
         \hspace{1cm}
         \newpage
-        \listoftables       % Índice de tablas
+        {%
+        \let\oldnumberline\numberline%
+        \renewcommand{\numberline}{\tablename~\oldnumberline}%
+        \listoftables%
+        }
+        %\listoftables       % Índice de tablas
         \newpage
         \thispagestyle{empty}
         \hspace{1cm}
         \newpage
-        \lstlistoflistings %Indice de listings de codigo
+        %\lstlistoflistings %Indice de listings de codigo
+        {%
+        \let\oldnumberline\numberline%
+        \renewcommand{\numberline}{\lstlistingname~\oldnumberline}%
+        \lstlistoflistings%
+        }
     
     %---    Cuerpo ---% 
     \mainmatter
@@ -78,9 +93,10 @@
         %Incluir aqui todos los capitulos (carpeta contenido)
     	\include{contenido/TFM-01_Introduccion}
         \include{contenido/TFM-02_Objetivos_y_Metodologia}
+        \include{contenido/TFM-05_Recomendacion}
         \include{contenido/TFM-03_Adquisicion},
         %\include{contenido/TFM-04_Analisis},
-        \include{contenido/TFM-05_Recomendacion},
+        %\include{contenido/TFM-05_Recomendacion},
         \include{contenido/TFM-06_Creacion},
         \include{contenido/TFM-07_Integracion},
         \include{contenido/TFM-09_Results}

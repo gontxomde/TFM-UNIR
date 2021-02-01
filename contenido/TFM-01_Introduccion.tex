@@ -24,8 +24,7 @@ Ha quedado patente que en la actualidad se hace necesario disponer de sistemas q
 Como se ha visto anteriormente, es muy beneficioso para las empresas que ofrecen productos online ser capaces de recomendar a sus usuarios otros productos a partir de los ya consumidos. Esto tiene, dos ventajas fundamentales:
 
 \begin{itemize}
-    \item La plataforma es capaz de orientar al usuario, de forma que se evita una posible fuga de usuarios ante la ingente cantidad de productos a consumir.
-    
+    \item La plataforma es capaz de orientar al usuario, de forma que se evita una posible fuga de usuarios a otras plataformas ante la ingente cantidad de productos a consumir.
     \item Una vez el usuario ha consumido un producto pueden serle recomendados otros relacionados, incrementando el número de productos consumidos por el usuario.
 \end{itemize}
 
@@ -41,7 +40,7 @@ El conjunto de datos utilizado posee metadatos sobre las películas, como palabr
     \label{fig:process}
 \end{figure}
 
-El proceso que se seguirá para la creación del sistema de recomendación se muestra en la Figura \ref{fig:process} y consistirá de los siguientes pasos:
+El proceso que se seguirá para la creación del sistema de recomendación se muestra en la \autoref{fig:process} y consistirá de los siguientes pasos:
 \begin{enumerate}
     \item Adquisición de los datos y limpieza de los mismos.
     %\item Análisis preliminar avanzado de los datos.
@@ -58,11 +57,25 @@ El proceso que se seguirá para la creación del sistema de recomendación se mu
 El trabajo, como se ha descrito en los capítulos anteriores, tiene como objetivo la creación de un sistema de recomendación de películas, aunque se tratará de incluir en el mismo el flujo \textit{end to end} de tratamiento de la información. El trabajo se estructurará en diferentes capítulos, conteniendo cada uno de ellos una de las partes del flujo. Los capítulos que se incluirán en este trabajo serán los siguientes:
 
 \begin{itemize}
-    \item \hyperref[chap:adq]{Capítulo 3}: Estructura de los datos a utilizar y preprocesado de los mismos. En este capítulo se realizará una presentación y explicación de los datos de los que se dispone, de forma que se entiendan los siguientes pasos seguidos.
+    \item \autoref{chap:adq}: Estructura de los datos a utilizar y preprocesado de los mismos. En este capítulo se realizará una presentación y explicación de los datos de los que se dispone, de forma que se entiendan los siguientes pasos seguidos.
     %\item \textit{Preliminary Data Analysis}. Caso de uso de análisis de datos para resolución de preguntas de negocio. %Al trabajar con un conjunto de datos siempre es importante realizar un análisis previo, de forma que pueda %entenderse la estructura de los mismos. También se verá la utilidad de disponer de un conjunto de datos %relativamente grande a la hora de responder a preguntas que pueden surgir en relación con la informacion contenida %en los mismos.
-    \item \hyperref[chap:recom]{Capítulo 4}: Sistemas de recomendación. Se realizará una explicación de la teoría que existe tras estos sistemas y los diferentes tipos que existen. Se creará el sistema de recomendación.
-    \item \hyperref[chap:api]{Capítulo 6}: Integración del sistema en una API y creación de un chatbot. Es importante que nuestro sistema de recomendación sea explotable por los usuarios, de nada sirve tener un buen sistema de recomendación si no puede ser usado. Se explicará la creación de un bot de Telegram y cómo crear una API que pueda ser llamada por el bot.
-    \item \hyperref[chap:resultados]{Capítulo 7}: Próximos pasos. Finalmente, se realizará un repaso de lo desarrollado en el trabajo y se propondrán puntos en los que mejorar el sistema que no hayan podido implementarse por algún motivo.
+    \item \autoref{chap:recom}: Sistemas de recomendación. Se realizará una explicación de la teoría que existe tras estos sistemas y los diferentes tipos que existen. Se creará el sistema de recomendación.
+    \item \autoref{chap:api}: Integración del sistema en una API y creación de un chatbot. Es importante que nuestro sistema de recomendación sea explotable por los usuarios, de nada sirve tener un buen sistema de recomendación si no puede ser usado. Se explicará la creación de un bot de Telegram y cómo crear una API que pueda ser llamada por el bot.
+    \item \autoref{chap:resultados}: Próximos pasos. Finalmente, se realizará un repaso de lo desarrollado en el trabajo y se propondrán puntos en los que mejorar el sistema que no hayan podido implementarse por algún motivo.
 \end{itemize}
+
+\section{Trabajo desarrollado}\label{sec:trabajodesarrollado}
+
+En esta memoria, se trata de solventar el problema que se ha comentado en las secciones anteriores. Las plataformas de contenido disponen de sistemas de recomendación potentes, pero con una limitación de origen: solo recomiendan contenido de sus plataformas. Esto hace que si vemos una película concreta en una plataforma y esta nos recomienda otra, es posible que haya mejores recomendaciones que la plataforma en cuestión no esté realizando debido a que no dispone de ese contenido. 
+
+Tal y como se verá en el \autoref{chap:recom}, un tipo de motores de recomendación son los motores basados en contenido. Estos motores se basan en características intrínsecas de las películas y no tanto en las opiniones atómicas de los usuarios. En la solución propuesta en este trabajo, las palabras clave que describen una película son la parte central de la recomendación. Esta elección se ha realizado principalmente por los datos disponibles, ya que los temas de una película, su año de producción o la opinión media de los usuarios son datos relativamente abiertos, mientras que las opiniones concretas de cada usuario son algo propiedad de las plataformas en las que se realizan estas valoraciones, por lo que no tenemos acceso a estos datos. 
+
+Para realizar la recomendación y una vez se ha limpiado el dataset, las películas se distribuyen en un espacio vectorial de keywords y se seleccionan en base a una distancia las más próximas a la película dada. Una vez se tienen las películas más cercanas a la película dada, se establece una heurística que puntúa cada una de estas películas en función de su puntuación, su año de producción y el ratio entre votos e ingresos. Esta heurística trata de, una vez se han seleccionado las películas candidatas a ser recomendadas, tratar de escoger de entre ellas las que probablemente prefiera el usuario. Por ejemplo, creemos que si tras ver una película de Harry Potter se nos recomienda una de magia similar pero del año 1950 es probable que el usuario sea reacio a escogerla.
+
+Una de las principales ventajas de nuestro motor de recomendación, es la forma en la que se ha implementado. Al ser un motor agnóstico en términos de plataforma (ya que simplemente tiene datos de las películas y su puntuación en IMDB), necesitábamos un sitio desde el que pudiera ser explotado. De entre todos los posibles, hemos elegido implementarlo en un bot de Telegram, ya que Telegram es una plataforma con una gran expansión y además multiplataforma. Consideramos que la mayoría de usuarios tendrán a mano un dispositivo móvil cuando estén viendo películas, por lo que en cualquier momento pueden escribir un título al bot y éste les enviará las recomendaciones obtenidas.
+
+Además, nuestro motor (y en general los motores basados en contenido) tiene una ventaja principal, y es que puede ser actualizado fácilmente con la llegada de nuevas películas a la cartelera. Dado que la información principal que utilizamos son las palabras clave, no necesitamos que un gran número de usuarios haya visto la película en cuestión para que tengamos la información suficiente para recomendar esa nueva película. Esto hace que sea un modelo especialmente beneficioso para que los usuarios puedan descubrir películas menos conocidas que puedan ser de su agrado.
+
+
 
     

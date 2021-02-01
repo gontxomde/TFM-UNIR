@@ -3,7 +3,7 @@
 
 En los capítulos anteriores se ha realizado una introducción al trabajo desarrollado en este proyecto, cuyo objetivo es la creación de un sistema de recomendación de películas basado en contenido. En dicha introducción, se ha realizado una justificación de la importancia de estos sistemas para las plataformas que alojan contenido así como para los usuarios.
 
-Además, en el Capítulo \ref{chap:adq} se ha realizado el proceso de limpieza y preprocesameinto de los datos que, como se ha dicho, es fundamental para lograr un buen desempeño del modelo en esta parte.\\
+Además, en el \autoref{chap:adq} se ha realizado el proceso de limpieza y preprocesameinto de los datos que, como se ha dicho, es fundamental para lograr un buen desempeño del modelo en esta parte.\\
 
 Recordar que en este momento disponemos de un conjunto de datos de aproximadamente 5000 películas y que contiene las siguientes columnas para cada una de ellas: título, año, géneros, keywords, director, 3 intérpretes principales, votos, idioma, país, media de votos, duración y presupuesto.
 
@@ -20,34 +20,34 @@ Esta estrategia podría ser discutida y probablemente existan estrategias ligera
 
 \subsection{Similaridad}
 
-El primer paso en la construcción del motor de recomendación consiste en definir un criterio que aporte información sobre cómo de parecidas son dos películas. Partiendo de la película seleccionada por el usuario, se toma el director, los actores principales, los géneros y las keywords de la película y se crea una matriz como la mostrada en \ref{tab:similarity}.
+El primer paso en la construcción del motor de recomendación consiste en definir un criterio que aporte información sobre cómo de parecidas son dos películas. Partiendo de la película seleccionada por el usuario, se toma el director, los actores principales, los géneros y las keywords de la película y se crea una matriz como la mostrada en la \autoref{tab:similarity}.
 
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{\begin{tabular}[c]{@{}l@{}}movie\\ title\end{tabular}} &
+\textbf{\begin{tabular}[c]{@{}l@{}}titulo\\ película\end{tabular}} &
   \textbf{director} &
   \textbf{actor 1} &
   \textbf{a2} &
   \textbf{a3} &
   \textbf{keyword 1} &
   \textbf{k2} &
-  \textbf{genre1} &
+  \textbf{género1} &
   \textbf{g2} &
   \textbf{...} &
   \textbf{gk} \\ \hline
-Film1  & $a_{11}$ & $a_{12}$ &  &  & ...      &  &  &  & ... & $a_{1q}$ \\ \hline
+Película 1  & $a_{11}$ & $a_{12}$ &  &  & ...      &  &  &  & ... & $a_{1q}$ \\ \hline
 ...    &          &          &  &  & ...      &  &  &  & ... &          \\ \hline
-Film i & $a_{i1}$ & $a_{i2}$ &  &  & $a_{ij}$ &  &  &  & ... & $a_{iq}$ \\ \hline
+Película i & $a_{i1}$ & $a_{i2}$ &  &  & $a_{ij}$ &  &  &  & ... & $a_{iq}$ \\ \hline
 ...    &          &          &  &  & ...      &  &  &  & ... &          \\ \hline
-Film p & $a_{p1}$ & $a_{p2}$ &  &  & ...      &  &  &  & ... & $a_{pq}$ \\ \hline
+Película p & $a_{p1}$ & $a_{p2}$ &  &  & ...      &  &  &  & ... & $a_{pq}$ \\ \hline
 \end{tabular}
-\caption{Matriz generada para el cálculo de la similaridad entre dos películas}
+\caption{Matriz generada para el cálculo de la similaridad entre dos películas. Se utiliza la información del director, los actores principales, las keywords que aparecen y los géneros a los que pertenece la película. Estos valores serán las coordenadas en el espacio vectorial definido por estas dimensiones.}
 \label{tab:similarity}
 \end{table}
 
-En esta matriz, el elemento $ij$ toma el valor $0,1$ dependiendo de la correspondencia entre la película $i$ y el contenido de la columna $j$ (que depende de la película seleccionada). Por ejemplo, si "keyword1" está en la película $i$, tendremos $a_{ij} = 1$ y $0$ en otro caso. Una vez definida la matriz, se determina la distancia entre dos películas mediante
+En esta matriz, el elemento $ij$ toma el valor $0,1$ dependiendo de la correspondencia entre la película $i$ y el contenido de la columna $j$ (que depende de la película seleccionada). Por ejemplo, si ``keyword1'' está en la película $i$, tendremos $a_{ij} = 1$ y $0$ en otro caso. Una vez definida la matriz, se determina la distancia entre dos películas mediante
 
 \begin{eqnarray}
 d_{m, n} = \sqrt{  \sum_{i = 1}^{N} \left( a_{m,i}  - a_{n,i} \right)^2  } 
@@ -72,7 +72,7 @@ Los dos primeros serán una medida directa de la popularidad de varias entradas.
 A continuación, calculamos la puntuación de acuerdo a esta ecuación:
 
 \begin{equation}
-\mathrm{score} = puntuación^2 \times \phi_{\sigma_1, c_1} \times  \phi_{\sigma_2, c_2},
+\mathrm{score} = puntuacion^2 \times \phi_{\sigma_1, c_1} \times  \phi_{\sigma_2, c_2},
 \label{eq:criteria}
 \end{equation}
 
@@ -89,260 +89,224 @@ Además, como se verá más adelante, se realizarán algunas operaciones más co
 \section{Definición de las funciones del motor}
 
 En primer lugar es necesario extraer de la entrada seleccionada por el usuario, para ello se implementa la siguiente función:
-\begin{lstlisting}[language=Python, caption= Variables utilizadas para la creación de la matriz.]
-def entry_variables(df, id_entry): 
+\begin{lstlisting}[language=Python, caption= {Variables utilizadas para la creación de la matriz de coordenadas. Toma los valores de las variables director y actores principales así como de las keywords y devuelve una lista con las coordenadas extraidas para la fila dada.}, label= {lst:variablesfila}]
+def variables_entrada(df, id_entrada): 
     """Calcula los valores tomados por las variables director_name, actor_[1,2,3]_name y plot_keywords para la
     película seleccionada por el usuario.
-
     Args:
         df (pd.DataFrame): DataFrame de películas
-        id_entry (int): Id de la entrada seleccionada
-
+        id_entrada (int): Id de la entrada seleccionada
     Returns:
         list: Lista que contiene los valores extraidos para la película seleccionada
     """
     
-    col_labels = []    
-    if pd.notnull(df['director_name'].iloc[id_entry]):
-        for s in df['director_name'].iloc[id_entry].split('|'):
-            col_labels.append(s)
+    etiquetas_col = []    
+    if pd.notnull(df['director_name'].iloc[id_entrada]):
+        for s in df['director_name'].iloc[id_entrada].split('|'):
+            etiquetas_col.append(s)
             
     for i in range(3):
-        column = 'actor_NUM_name'.replace('NUM', str(i+1))
-        if pd.notnull(df[column].iloc[id_entry]):
-            for s in df[column].iloc[id_entry].split('|'):
-                col_labels.append(s)
+        columna = 'actor_NUM_name'.replace('NUM', str(i+1))
+        if pd.notnull(df[columna].iloc[id_entrada]):
+            for s in df[columna].iloc[id_entrada].split('|'):
+                etiquetas_col.append(s)
                 
-    if pd.notnull(df['plot_keywords'].iloc[id_entry]):
-        for s in df['plot_keywords'].iloc[id_entry].split('|'):
-            col_labels.append(s)
-    return col_labels
+    if pd.notnull(df['plot_keywords'].iloc[id_entrada]):
+        for s in df['plot_keywords'].iloc[id_entrada].split('|'):
+            etiquetas_col.append(s)
+    return etiquetas_col
 \end{lstlisting}
 
 Una vez se tienen las variables con las que se calculará la distancia entre la película seleccionada por el usuario y las demás, se genera la matriz de $0$ y $1$ con una película por fila dependiendo de si coincide o no la información de ambas películas:
 
-\begin{lstlisting}[language=Python, caption= Creación de la matriz de coordenadas de las películas.]
-def add_variables(df, REF_VAR):
-    """Añade al dataframe de películas las columnas dadas en REF_VAR (que serán el 
-    director, etc de una película) y las inicializa a 0 o 1 dependiendo de si la 
+\begin{lstlisting}[language=Python, caption= {Creación de la matriz de coordenadas de las películas. Para ello, se hace uso de la función definida en el \autoref{lst:variablesfila}. Además, se añaden los valores de los géneros de la película.}]
+def anade_variables(df, VAR_REF):
+    """Añade al dataframe de películas las columnas dadas en VAR_REF (que serán el 
+    director, etc de unapelícula) y las inicializa a 0 o 1 dependiendo de si la 
     película es del mismo director, tiene a ese actor, etc
-
     Args:
         df (pd.DataFrame): DataFrame de películas
-        REF_VAR (list): Salida de aplicar entry_variables sobre el df y una película
-
+        VAR_REF (list): Salida de aplicar variables_entrada sobre el df y una película
     Returns:
         pd.DataFrame: DataFrame con las nuevas películas
     """
-    for s in REF_VAR: 
+    for s in VAR_REF: 
         df[s] = pd.Series([0 for _ in range(len(df))])
-    columns = ['genres', 'actor_1_name', 'actor_2_name',
+    columnas = ['genres', 'actor_1_name', 'actor_2_name',
                 'actor_3_name', 'director_name', 'plot_keywords']
-    for category in columns:
-        for index, row in df.iterrows():
-            if pd.isnull(row[category]): 
+    for categoria in columnas:
+        for indice, fila in df.iterrows():
+            if pd.isnull(fila[categoria]):
                 continue
-            for s in row[category].split('|'):
-                if s in REF_VAR: df.set_value(index, s, 1)            
+            for s in fila[categoria].split('|'):
+                if s in VAR_REF: df.at[indice, s] = 1            
     return df
 \end{lstlisting}
 
-Con estas dos funciones ya definidas, podemos crear la función \texttt{recommend}, que será la que realice la selección de las $N$ películas más cercanas a la dada por el usuario. La métrica utilizada para evaluar cuales son las películas más cercanas es la distancia euclídea.
+Con estas dos funciones ya definidas, podemos crear la función \texttt{recomienda}, que será la que realice la selección de las $N$ películas más cercanas a la dada por el usuario. La métrica utilizada para evaluar cuales son las películas más cercanas es la distancia euclídea.
 
-\begin{lstlisting}[language=Python, caption=Obtención de las 30 mejores películas dada una por el usuario.]
-def recommend(df, id_entry, N = 31):
+\begin{lstlisting}[language=Python, caption= {Obtención de las 30 mejores películas dada una por el usuario. Es una de las funciones principales del proyecto. Calcula las variables de entrada del algoritmo de KNN y devuelve los ID de las películas más cercanas a la dada.}]
+def recomienda(df, id_entrada, N = 31):
     """Crea una lista de N películas similares a las seleccionadas por el usuario
-
     Args:
         df (pd.DataFrame): DataFrame de películas
-        id_entry (int): Id de la entrada seleccionada
+        id_entrada (int): Id de la entrada seleccionada
         N (int, optional): Number of films recommended 
-        (take into account that the nearest will be always itself). Defaults to 31.
-
+        (take into account that the nearest will be always itself). Por defecto 31.
     Returns:
         list: List of ids of films recommended
     """
-    df_copy = df.copy(deep = True)    
-    list_genres = set()
+    df_copia = df.copy(deep = True)    
+    lista_generos = set()
     for s in df['genres'].str.split('|').values:
-        list_genres = list_genres.union(set(s))    
+        lista_generos = lista_generos.union(set(s))    
 
     # Creación de variables adicionales para comprobar la similaridad
-    variables = entry_variables(df_copy, id_entry)
-    variables += list(list_genres)
-    df_new = add_variables(df_copy, variables)
+    variables = variables_entrada(df_copia, id_entrada)
+    variables += list(lista_generos)
+    df_nuevo = anade_variables(df_copia, variables)
 
     # Determinación de los vecinos más próximos: la distancia se calcula con las nuevas vairables
-    X = df_new.as_matrix(variables)
+    X = df_nuevo[variables].values
     nbrs = NearestNeighbors(n_neighbors=N, algorithm='auto', metric='euclidean').fit(X)
-
-    distances, indices = nbrs.kneighbors(X)    
-    xtest = df_new.iloc[id_entry].as_matrix(variables)
+    
+    xtest = df_nuevo.iloc[id_entrada][variables].values
     xtest = xtest.reshape(1, -1)
 
-    distances, indices = nbrs.kneighbors(xtest)
+    _, indices = nbrs.kneighbors(xtest)
 
     return indices[0][:]
 \end{lstlisting}
 
-Una vez se tienen las $N$ mejores películas, como se ha dicho anteriormente, se ordenan de forma descendente de acuerdo al criterio de la Ecuación\ref{eq:criteria} (implementado en la Función\ref{lst:criteria} utilizando la Función \texttt{extract\_parameters}:
+Una vez se tienen las $N$ mejores películas, como se ha dicho anteriormente, se ordenan de forma descendente de acuerdo al criterio de la \autoref{eq:criteria} (implementado en el \autoref{lst:criteria} utilizando la función \texttt{extrae\_parametros}):
 
-\begin{lstlisting}[language=Python, caption=]
-def extract_parameters(df, list_films, N = 31):
-    """Extrae algunas variables del dataframe dado como entrada y devuelve la lista
-    de N películas. Esta lista se ordena de acuerdo al criterio de la función 
-    selection_criteria.
-
+\begin{lstlisting}[language=Python, caption={Extrae algunas variables del dataframe dado como entrada y devuelve la lista de N películas. Esta lista se ordena de acuerdo al criterio de la función criterio\_seleccion, definida en el \autoref{lst:criteria}}]
+def extrae_parametros(df, ultimas_peliculas, N = 31):
+    """Extrae algunas variables del dataframe dado como entrada y devuelve la lista de N películas. Esta lista se ordena de acuerdo al criterio de la función criterio_seleccion.
     Args:
         df ([type]): DataFrame de películas
-        list_films (list): Lista con las n películas recomendadas
-        N (int, optional): Number of films recommended. Defaults to 31.
-
+        ultimas_peliculas (list): Lista con las n películas recomendadas
+        N (int, optional): Number of films recommended. Por defecto 31.
     Returns:
         list: Películas recomendadas
     """
-    films_parameters = ['_' for _ in range(N)]
+    parametros_peliculas = ['_' for _ in range(N)]
     i = 0
-    max_users = -1
-    for index in list_films:
-        film_parameters[i] = list(df.iloc[index][['movie_title', 'title_year',
+    maximo_usuarios = -1
+    for indice in ultimas_peliculas:
+        parametros_peliculas[i] = list(df.iloc[indice][['movie_title', 'title_year',
                                         'vote_average', 
                                         'num_voted_users', 'gross']])
-        film_parameters[i].append(index)
-        max_users = max(max_users, film_parameters[i][4] )
+        parametros_peliculas[i].append(indice)
+        maximo_usuarios = max(maximo_usuarios, parametros_peliculas[i][4] )
         i += 1
     # The first element is the selected film itself
-    title_main = film_parameters[0][0]
-    ref_year  = film_parameters[0][1]
-    votes_norm = (x[3] - df.num_voted_users.mean())/df.num_voted_users.std()
-    gross_norm = (x[4] - df.gross.mean())/df.gross.std()
-
+    titulo_principal = parametros_peliculas[0][0]
+    ano_ref  = parametros_peliculas[0][1]
     
-    film_parameters.sort(key = lambda x:selection_criteria(title_main,
-                         ref_year, 
-                         title = x[0], 
-                         year = x[1],
-                         score = x[2], 
-                         ratio = votes_norm/gross_norm),
-                         reverse = True)
+    parametros_peliculas.sort(key = lambda x:criterio_seleccion(titulo_principal,
+                                                            ano_ref, 
+                                                            titulo = x[0], 
+                                                            ano = x[1],
+                                                            puntuacion = x[2],
+                              votos_norm = ((x[3] - df.num_voted_users.mean())/df.num_voted_users.std()),
+                              ganancias_norm = ((x[4] - df.gross.mean())/df.gross.std())),
+                                                            reverse = True)
     
-    return parametres_films
+    return parametros_peliculas
 \end{lstlisting}
 
 
-\begin{lstlisting}[language=Python, caption=Criterios de selección para la elección de las mejores películas., label={lst:criteria}]
-def selection_criteria(title_main, ref_year, title, year, score, ratio):
-    """Calcula la puntuación de una película como recomendación de otra en base 
-    a la similaridad de su título, la distancia temporal entre ambos lanzamientos
-    y el número de votos de la película evaluada y la puntuación de la película.
-    Además, la similitud entre títulos se tiene en cuenta para evitar la 
-    recomendación de secuelas. Es decir, si dos películas tienen un nombre muy 
-    similar, se desechara como recomendación.
-
+\begin{lstlisting}[language=Python, caption= {Criterios de selección para la elección de las mejores películas. Se parte de la puntuación de la película y se modifica según la proximidad temporal de la película a evaluar con la película de referencia y el ratio entre votos e ingresos de la película. El objetivo de esto es introducir una heurística que permita ordenar las recomendaciones basadas en contenido de acuerdo con lo que se prevé que preferira el usuario. Se puntuan mejor películas más cercanas a la dada por el usuario y que tengan muchos votos en relación con sus ingresos.}, label={lst:criteria}]
+def criterio_seleccion(titulo_principal, ano_ref, titulo, ano, puntuacion, votos_norm, ganancias_norm):
+    """Calcula la puntuación de una película como recomendación de otra en base a la similaridad de su título, la distancia temporal entre ambos lanzamientos y el número de votos de la película evaluada y la puntuación de la película. Además, la similitud entre títulos se tiene en cuenta para evitar la recomendación de secuelas. Es decir, si dos películas tienen un nombre muy similar, se desechara como recomendación.
     Args:
-        title_main (str): Título de la película dada por el usuario
-        ref_year (int): Año de lanzamiento de la película dada por el usuario
-        title (str): Título de la película a evaluar
-        year (int): Año de lanzamiento de la película a evaluar
-        score (float): Votación media de la película a evaluar
+        titulo_principal (str): Título de la película dada por el usuario
+        ano_ref (int): Año de lanzamiento de la película dada por el usuario
+        titulo (str): Título de la película a evaluar
+        ano (int): Año de lanzamiento de la película a evaluar
+        puntuacion (float): Votación media de la película a evaluar
         ratio (float): Ratio entre votos y presupuesto de la película
-
     Returns:
-        float: Mark of the film given
+        float: Nota de la película dada
     """
-    if pd.notnull(ref_year):
-        factor_1 = gaussian_filter(ref_year, year, 10)
+    ratio = votos_norm/ganancias_norm
+    if pd.notnull(ano_ref):
+        factor_1 = filtro_gaussiano(ano_ref, ano, 10)
     else:
         factor_1 = 1        
-
-        
-    if pd.notnull(votes):
-        factor_2 = gaussian_filter(ratio, 0, 1)
+    if pd.notnull(ratio):
+        factor_2 = filtro_gaussiano(ratio, 0, 1)
     else:
         factor_2 = 0
-        
-    if sequel(title_main, title):
+    if secuela(titulo_principal, titulo):
         mark = 0
-        #print(f"Tenemos sequel entre {title_main} y {title}")
     else:
-        mark = score * factor_1 * factor_2
-    #print(f"'La nota de {title} es: {mark}'")
+        mark = puntuacion * factor_1 * factor_2
     return mark
 \end{lstlisting}
 
-Llegados a este punto, supóngase que el usuario ha elegido la película Harry Potter y la Piedra Filosofal. Sin ejecutar el recomendador y sin sonar demasiado raro, parece que las películas que recomendará el sistema, si no se modifica lo dicho hasta ahora, serán las demás películas de Harry Potter, ya que tendrán las mismas keywords o muy parecidas, compartirán actores y serán de la misma época. Sin embargo, estas películas sean probablemente conocidas por el usuario. Por tanto, se implementa la funcion \texttt{sequel}, que trata de ver, mediante lógica difusa y medidas como la distancia Levenshtein \cite{levenshtein}, que mide la distancia entre dos palabras en términos de los cambios necesarios para llegar de una a otra. La función \texttt{sequel}\ref{lst:sequel} servirá para filtrar los resultados dados al usuario.
-\begin{lstlisting}[language=Python, label={lst:sequel},caption=Determinación de si dos películas son o no secuelas y eliminarlas.]
-def sequel(title_1, title_2):   
+Llegados a este punto, supóngase que el usuario ha elegido la película Harry Potter y la Piedra Filosofal. Sin ejecutar el recomendador y sin sonar demasiado raro, parece que las películas que recomendará el sistema, si no se modifica lo dicho hasta ahora, serán las demás películas de Harry Potter, ya que tendrán las mismas keywords o muy parecidas, compartirán actores y serán de la misma época. Sin embargo, estas películas sean probablemente conocidas por el usuario. Por tanto, se implementa la función \texttt{sequela}, que trata de ver, mediante lógica difusa y medidas como la distancia Levenshtein \cite{levenshtein}, que mide la distancia entre dos palabras en términos de los cambios necesarios para llegar de una a otra. La función \texttt{secuela}, definida en el \autoref{lst:sequel} servirá para filtrar los resultados dados al usuario.
+
+\begin{lstlisting}[language=Python, label={lst:sequel},caption={Determinación de si dos películas son o no secuelas y eliminarlas. Se determina que dos películas son secuelas si tienen el mismo título o es muy similar. Para ello se utilizan técnicas de lógica difusa. Si una de las posibles recomendaciones es unas secuela de la dada por el usuario, esta se elimina, ya que se recomendarían películas demasiado similares.}]
+def secuela(titulo_1, titulo_2):   
     """Compara los títulos de dos películas y devuelve si son similares o no
-
     Args:
-        title_1 (str): Primer título
-        title_2 (str): Segundo título
-
+        titulo_1 (str): Primer título
+        titulo_2 (str): Segundo título
     Returns:
-        bool: True if the films are sequels. False otherwise.
+        bool: True cuando las películas son secuelas. False en otro caso
     """
-    #print("$$$$$$$$$$$$$$$$$$$$$$")
-    #print(title_1, "|",title_2)
-    #print(fuzz.ratio(title_1, title_2) , fuzz.token_set_ratio(title_1, title_2))
-    if fuzz.ratio(title_1.lower(), title_2.lower()) > 50 or fuzz.token_set_ratio(title_1.lower(), title_2.lower()) > 60:
+    if fuzz.ratio(titulo_1.lower(), titulo_2.lower()) > 50 or fuzz.token_set_ratio(titulo_1.lower(), titulo_2.lower()) > 60:
         return True
     else:
         return False
-def remove_sequels(film_selection):
+def quita_secuelas(seleccion_peliculas):
     """Removes sequels from the list of films given
-
     Args:
-        film_selection (list): Lista de películas de la que quitar las secuelas
-
+        seleccion_peliculas (list): Lista de películas de la que quitar las secuelas
     Returns:
         list: Lista sin secuelas
     """ 
-    removed_from_selection = []
-    for i, film_1 in enumerate(film_selection):
-        for j, film_2 in enumerate(film_selection):
+    quitadas_de_seleccion = []
+    for i, pelicula_1 in enumerate(seleccion_peliculas):
+        for j, pelicula_2 in enumerate(seleccion_peliculas):
             if j <= i: continue 
-            if sequel(film_1[0], film_2[0]): 
-                last_film = film_2[0] if film_1[1] < film_2[1] else film_1[0]
-                removed_from_selection.append(last_film)
-
-    film_list = [film for film in film_selection if film[0] not in removed_from_selection]
-
-    return film_list  
+            if secuela(pelicula_1[0], pelicula_2[0]): 
+                last_film = pelicula_2[0] if pelicula_1[1] < pelicula_2[1] else pelicula_1[0]
+                quitadas_de_seleccion.append(last_film)
+    lista_peliculas = [film for film in seleccion_peliculas if film[0] not in quitadas_de_seleccion]
+    return lista_peliculas
 \end{lstlisting}
 
 Finalmente, se implementa la función que se encarga de obtener estas 5 mejores películas:
 
-\begin{lstlisting}[language=Python, caption=]
-def add_to_selection(film_selection, parameters_films, N = 31):
-    """Completa la lista film_selection que contiene 5 películas que se recomendarán
-    al usuario. Las películas son seleccionadas de parameters_list y sólo se tienen
-    en cuenta si el título es suficientemente distinto del de otras películas.
-
+\begin{lstlisting}[language=Python, caption={Esta función se encarga de completar la selección de las 5 películas que se recomendarán. Completa la lista seleccion\_peliculas que contiene 5 películas que se recomendarán al usuario. Las películas son seleccionadas de parametros\_películas y sólo se tienen en cuenta si el título es suficientemente distinto del de otras películas.}]
+def add_a_seleccion(seleccion_peliculas, parametros_peliculas, N = 31):
+    """Completa la lista seleccion_peliculas que contiene 5 películas que se recomendarán al usuario. Las películas son seleccionadas de parametros_películas y sólo se tienen en cuenta si el título es suficientemente distinto del de otras películas.
     Args:
-        film_selection (list): Lista de películas
-        parameters_films (list): Lista de parámetros
-        N (int, optional): Películas a puntuar. Defaults to 31.
-        M (int, optional): Películas a recomendar. Defaults to 5.
-
+        seleccion_peliculas (list): Lista de películas
+        parametros_peliculas (list): Lista de parámetros
+        N (int, optional): Películas a puntuar. Por defecto 31.
+        M (int, optional): Películas a recomendar. Por defecto 5.
     Returns:
-        list: films reselected
+        list: peliculas seleccionadas
     """
-    film_list = film_selection[:]
-    icount = len(film_list)    
+    lista_peliculas = seleccion_peliculas[:]
+    icuenta = len(lista_peliculas)    
     for i in range(N):
-        already_in_list = False
-        for s in film_selection:
-            if s[0] == parameters_films[i][0]: 
-                already_in_list = True
-            if sequel(parameters_films[i][0], s[0]): 
-                already_in_list = True            
-        if already_in_list: continue
+        ya_en_lista = False
+        for s in seleccion_peliculas:
+            if s[0] == parametros_peliculas[i][0]: 
+                ya_en_lista = True
+            if secuela(parametros_peliculas[i][0], s[0]): 
+                ya_en_lista = True            
+        if ya_en_lista: continue
             
-        icount += 1
-        if icount <= 5:
-            film_list.append(parameters_films[i])
-    return film_list
+        icuenta += 1
+        if icuenta <= 5:
+            lista_peliculas.append(parametros_peliculas[i])
+    return lista_peliculas
 \end{lstlisting}
 
 A modo de \textit{wrapper} de este flujo, la función \textit{find\_similarities} ejecuta todo el \textit{pipeline} de búsqueda de las películas recomendadas. Por ejemplo, para la película de Piratas del Caribe, el sistema realiza las siguientes recomendaciones:
@@ -355,42 +319,37 @@ A modo de \textit{wrapper} de este flujo, la función \textit{find\_similarities
     \item King Kong
 \end{enumerate}
 
-\begin{lstlisting}[language=Python, caption=Wrapper del pipeline de búsqueda de recomendaciones.]
-def find_similarities(df, id_entry, del_sequels = True, verbose = False, N = 31):
+\begin{lstlisting}[language=Python, caption=Wrapper del pipeline de búsqueda de recomendaciones. Se trata de la función final, es decir, la que llama a todas las demás para encontrar las películas recomendadas. Parte de un ID de película y busca las similares en términos de keywords, generos, etc., las ordena por la heurística definida y ddevuelve las seleccionadas]
+def encuentra_similaridades(df, id_entrada, borra_secuelas = True, verbose = False, N = 31):
     """Dado el id de una película busca las 5 mejores recomendaciones.
-
     Args:
         df (pd.DataFrame): [description]
-        id_entry (int): [description]
-        del_sequels (bool, optional): Borrar secuelas de las recomendaciones. Defaults to True.
-        N (int, optional): Películas a evaluar. Defaults to 31.
-        M (int, optional): Películas a recomendar. Defaults to 31.
-
+        id_entrada (int): [description]
+        borra_secuelas (bool, optional): Borrar secuelas de las recomendaciones. Por defecto True.
+        N (int, optional): Películas a evaluar. Por defecto 31.
+        M (int, optional): Películas a recomendar. Por defecto 31.
     Returns:
         list: Selección de películas recomendadas
     """
     if verbose: 
-        print(90*'_' + '\n' + "QUERY: films similar to id={} -> '{}'".format(id_entry,
-                                df.iloc[id_entry]['movie_title']))
-    list_films = recommend(df, id_entry, N)
+        print(90*'_' + '\n' + "QUERY: films similar to id={} -> '{}'".format(id_entrada,
+                                df.iloc[id_entrada]['movie_title']))
+    ultimas_peliculas = recomienda(df, id_entrada, N)
     # Crear lista de N películas
-    parameters_films = extract_parameters(df, list_films, N)
-    #print("&&\n",parameters_films)
+    parametros_peliculas = extrae_parametros(df, ultimas_peliculas, N)
     # Seleccionar 5 películas de la  listaSelect 5 films from this list
-    film_selection = []
-    film_selection = add_to_selection(film_selection, parameters_films, N)
-    #print("&&\n",film_selection)
+    seleccion_peliculas = []
+    seleccion_peliculas = add_a_seleccion(seleccion_peliculas, parametros_peliculas, N)
     # Borrado de las secuelas
-    if del_sequels: film_selection = remove_sequels(film_selection)
+    if borra_secuelas: 
+        seleccion_peliculas = quita_secuelas(seleccion_peliculas)
     # Añadir nuevas películas a la lista
-    #print(film_selection)
-    film_selection = add_to_selection(film_selection, parameters_films, N)
-    selection_titles = []
-    for i,s in enumerate(film_selection):
-        selection_titles.append([s[0].replace(u'\xa0', u''), s[4]])
+    seleccion_peliculas = add_a_seleccion(seleccion_peliculas, parametros_peliculas, N)
+    señeccion_titulos = []
+    for i,s in enumerate(seleccion_peliculas):
+        señeccion_titulos.append([s[0].replace(u'\xa0', u''), s[4]])
         if verbose: print("nº{:<2}     -> {:<30}".format(i+1, s[0]))
-
-    return selection_titles
+    return señeccion_titulos
 \end{lstlisting}
 
 \section{Resumen}
