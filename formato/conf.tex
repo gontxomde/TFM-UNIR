@@ -38,14 +38,21 @@
 %Tablas (líneas horizonales toprule,bottomrule,midrule)
 \usepackage{booktabs}
 
-%Estructura del documento
-\usepackage[toc,page,title,titletoc]{appendix}
-\renewcommand*\appendixpagename{Apéndices}
 
 %Idioma
 \usepackage[spanish]{babel}
 \addto\captionsspanish{\renewcommand{\tablename}{Tabla}}
 \addto\captionsspanish{\renewcommand{\listtablename}{Índice de tablas}}
+
+%Estructura del documento
+\usepackage[toc,page,title,titletoc]{appendix}
+%\renewcommand*\appendixpagename{Anexo}
+\addto\captionsspanish{%
+  \renewcommand\appendixname{Anexo}
+  \renewcommand\appendixpagename{Anexos}
+}
+\renewcommand\appendixtocname{Anexos}
+\renewcommand\appendixtocname{Anexos}
 
 %Color azul UNIR
 \usepackage[dvipsnames]{xcolor}
@@ -195,4 +202,9 @@
 }
 \addto\extrasspanish{%
   \renewcommand{\equationautorefname}{Ecuación}%
+}
+
+\addto\captionsspanish{%
+  \renewcommand\appendixname{Anexo}
+  \renewcommand\appendixpagename{Anexos}
 }

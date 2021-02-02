@@ -24,24 +24,47 @@ Para la creación del sistema de recomendación de películas basado en contenid
         \item popularity: Popularidad (unidades desconocidas)
         \item production\_companies: Compañías encargadas de la producción
         \item production\_countries: Paises productores de la película
-        \item release\_date: Fecha de lanzamientoç
-        \item revenue: Recaudación
+        \item release\_date: Fecha de lanzamiento de la película
+        \item revenue: Recaudación de la película en dólares
         \item runtime: Días en cartelera
-        \item spoken\_languages: Idiomas hablados
+        \item spoken\_languages: Idiomas hablados en la película
         \item status: Estado de la película
         \item tagline: Subtítulo
         \item title: Título en inglés
-        \item vote\_average: Promedio de votos
-        \item vote\_count: Número de votos
+        \item vote\_average: Promedio de votos en IMDB
+        \item vote\_count: Número de votos en IMDB
     \end{itemize}
     \item Créditos
     \begin{itemize}
         \item movie\_id: Identificador de la película (para unirlo con el dataset anterior).
         \item title: Título en inglés de la película
-        \item cast: Actores que aparecen (en orden e importancia)
-        \item crew: Equipo participante en la película
+        \item cast: Actores que aparecen (en orden e importancia). Campo en formato JSON.
+        \item crew: Equipo participante en la película, es un JSON con una lista de diccionarios. Cada elemento de la lista tiene el nombre del participante y el cargo.
     \end{itemize}
 \end{itemize}
+
+En la \autoref{tab:peliculas} puede verse un análisis descriptivo de los campos numéricos de los datos anteriormente mencionados. El resto de campos son campos de texto:
+
+\begin{table}[h]
+\centering
+\resizebox{0.8\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+{} &        budget &   popularity &       revenue &      runtime &  vote\_average &    vote\_count \\
+\midrule
+count &  $4.8\cdot 10^{3}$ &  $4803.0$ &  $4.8\cdot 10^{3}$ &  $4801.0$ &   $4803.0$ &   $4803.0$ \\
+mean  &  $2.9\cdot 10^{7}$ &   $21.5$ &  $8.2\cdot 10^{7}$ &   $106.9$ &      $6.1$ &    $690.2$ \\
+std   &  $4.1\cdot 10^{7}$ &   $31.8$ &  $1.6\cdot 10^{8}$ &    $22.6$ &      $1.2$ &   $1234.5$ \\
+min   &  $0.0\cdot 10^{0}$ &       $0.0$ &  $0.0\cdot 10^{0}$ &     $0.0$ &      $0.0$ &      $0.0$ \\
+25\%   &  $7.9\cdot 10^{5}$ &    $4.7$ &  $0.0\cdot 10^{0}$ &    $94.0$ &      $5.6$ &     $54.0$ \\
+50\%   &  $1.5\cdot 10^{7}$ &   $12.9$ &  $1.9\cdot 10^{7}$ &   $103.0$ &      $6.2$ &    $235.0$ \\
+75\%   &  $4.0\cdot 10^{7}$ &   $28.3$ &  $9.3\cdot 10^{7}$ &   $118.0$ &      $6.8$ &    $737.0$ \\
+max   &  $3.8\cdot 10^{8}$ &  $875.6$ &  $2.8\cdot 10^{9}$ &   $338.0$ &     $10.0$ &  $13752.0$ \\
+\bottomrule
+\end{tabular}}
+\caption{Análisis descriptivo de las variables numéricas de los datos de entrada. Se muestra para cada campo el número de filas informadas, la media, la desviación estandar y los cuartiles.}
+\label{tab:peliculas}
+\end{table}
 
 \newpage
 \section{Importación de datos de películas}
@@ -210,7 +233,8 @@ lista_duplicados = df_temp['movie_title'].map(df_temp['movie_title'].value_count
 df_temp[lista_duplicados][lista_var_de_duplicados].sort_values('movie_title')
 \end{lstlisting}
 
-El resultado se muestra en la \autoref{tab:duplicated_entries}. Como puede comprobarse, únicamente hay tres parejas de películas con el mismo título. Analizándolo a simple vista puede verse que se trata de remakes, por lo que no podemos considerarlo como entradas duplicadas, ya que pueden diferir en calidad e incluso en alguna palabra clave.
+El resultado se muestra en la \autoref{tab:duplicated_entries}. Como puede comprobarse, únicamente hay tres parejas de películas con el mismo título. Analizándolo a simple vista puede verse que se trata de remakes, por lo que no podemos considerarlo como entradas duplicadas, ya que pueden diferir en calidad e incluso en alguna palabra clave.\\
+
 \begin{table}[h]
 \centering
 \begin{tabular}{llrl}
@@ -225,7 +249,7 @@ El resultado se muestra en la \autoref{tab:duplicated_entries}. Como puede compr
 2877 &         The Host &      2006 &         Bong Joon-ho \\
 \bottomrule
 \end{tabular}
-\caption{Entradas con el título duplicado. Puede verse que se no se trata de una errata, ya que aunque las películas se llaman igual, son de años diferentes y tienen directores diferentes. Esto significa que, probablemente, se trate de \textit{remakes} de las pelícuals originales.}
+\caption{Entradas con el título duplicado. Puede verse que se no se trata de una errata, ya que aunque las películas se llaman igual, son de años diferentes y tienen directores diferentes. Esto significa que, probablemente, se trate de \textit{remakes} de las películas originales.}
 \label{tab:duplicated_entries}
 \end{table}
 

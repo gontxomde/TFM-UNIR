@@ -9,7 +9,7 @@
 
 
 % Bibliografía (no establecido por UNIR, cosecha propia)
-\usepackage[bibencoding=utf8,maxcitenames=1,backend=biber,bibstyle=numeric,citestyle=numeric,sorting=ynt]{biblatex}
+\usepackage[bibencoding=utf8,maxcitenames=1,backend=biber,bibstyle=numeric,citestyle=numeric,sorting=none,doi=false]{biblatex}
 \addbibresource[location=local]{contenido/TFM-biblio.bib}
 %\AtEveryBibitem{[\printfield{labelnumber}]\addspace}
 % \cite{xxx} -> (Author, Year)
