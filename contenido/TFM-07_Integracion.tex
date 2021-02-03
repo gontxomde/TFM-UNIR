@@ -13,7 +13,7 @@ Telegram es una compañía de mensajería instánea en la nube. Dispone de clien
     \centering
     \captionsetup{width=7cm}
     \includegraphics[width=5cm]{contenido/imagenes/Telegram-logo.jpg}
-    \caption{Logo de la aplicación Telegram}
+    \caption{Logo de la aplicación Telegram. Fuente: Wikipedia \cite{wiki:telegramImage}}
 \end{figure}
 Entre las innumerables características de Telegram, en este proyecto la de mayor importancia es la posibilidad de crear bots. Los bots de Telegram son aplicaciones de terceros que corren dentro de telegram. Los usuarios pueden interactuar con los bots enviándoles mensajes y comandos. Entre las posibiildades de un bot se encuentran:
 \begin{itemize}
@@ -61,19 +61,20 @@ Flask \cite{wiki:FlaskHelloWorld} es un micro framework web escrito en Python pa
     \centering
     \captionsetup{width=7cm}
     \includesvg[width=9cm]{contenido/imagenes/flask}
+    \caption{Logo del \textit{framework} Flask. Fuente: Wikipedia \cite{wiki:FlaskHelloWorld}}
 \end{figure}
 
 Mediante Flask se creará un servicio web que podrá ser llamado por el bot de Telegram, únicamente enviando a Telegram la URL del servicio Web y el token del bot. La API recibirá el mensaje, lo procesará y enviará al usuario la respuesta.\\
 
 El ``hola mundo'' de Flask es el siguiente:
 
-\begin{lstlisting}[language=Python, caption= Aplicación Web básica creada con Flask.]
+\begin{lstlisting}[language=Python, caption= {Aplicación Web básica creada con Flask. Se crea una API que devolverá la cadena de texto \textit{Hello world!} al ser invocada. Esto se implementa para ver que la librería está instalada correctamente y funciona. Fuente: Wikipedia}]
 from flask import Flask
 app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "¡Hello world!"
+    return "Hello world!"
 
 if __name__ == "__main__":
     app.run(port = 8000)
@@ -81,11 +82,11 @@ if __name__ == "__main__":
 
 Así, se tendría una aplicación web que en el puerto $8000$ devolvería ``Hello World''. Mediante los decoradores \texttt{@app.route()} se indica la ruta a través de la cual se entra a ese endpoint de la API.\\
 
-La API se ejecutará en una Raspberry PI, debido a las ventajas que tiene en términos de coste frente a un servidor. Es de esperar que el servicio no tenga demasiadas solicitudes, por lo que tampoco tendrá problemas de volumen de peticiones. El problema es hacer que la API esté disponible a través de una URL. Para ello, dado que no se dispone de una IP estática ni de la posibilidad de abrir los puertos en el router, se utiliza el servicio \href{https://ngrok.com/}{Ngrok}. Ngrok es un servicio gratuito que publica un determinado puerto de localhost a través de una URL.\\
+La API se ejecutará en una Raspberry PI, debido a las ventajas que tiene en términos de coste frente a un servidor. Es de esperar que el servicio no tenga demasiadas solicitudes, por lo que tampoco tendrá problemas de volumen de peticiones. El problema es hacer que la API esté disponible a través de una URL. Para ello, dado que no se dispone de una IP estática ni de la posibilidad de abrir los puertos en el router, se utiliza el servicio \href{https://ngrok.com/}{Ngrok}. Ngrok es un servicio gratuito que publica un determinado puerto de localhost a través de una URL a través de un tunel.\\
 
 Una vez explicado el funcionamiento, en el \autoref{lst:API}
 
-\begin{lstlisting}[language=Python, label = {lst:API}, caption= Creación de la API del sistema de recomendación en Python usando Flask.]
+\begin{lstlisting}[language=Python, label = {lst:API}, caption={Creación de la API del sistema de recomendación en Python usando Flask. En primer lugar se eliminan los posibles webhooks que existieran y se crea el nuevo con la URL a través de la cual pueda accederse a la API que estamos construyendo. En la función \texttt{main}, que es la que procesará los mensajes, se filtra para procesar únicamente los mensajes que lleguen tras el encendido. Esto se hace porque en caso contrario se procesarían de golpe todos los mensajes que hubieran llegado con la API apagada. Se instancia el recomendador para poder pedirle recomendaciones. En caso de que el mensaje sea /start significará que es el inicio de la conversacion con el bot y se saluda al usuario. En caso contrario , se intenta recomendar películas con el mensaje que se haya recibido, dando por hecho que será el título de una película. Finalmente, se generan las reocomendaciones, se maqueta el mensaje que se enviará al usuario y se hace una llamada a la API de Telegram para que envíe el mensaje con la respuesta al chat de origen.}]
 import requests
 import time
 import math
@@ -169,7 +170,7 @@ if __name__ =='__main__':
 
 En el \autoref{chap:creacion} se finalizó teniendo un sistema de recomendación que dado el id de una película, obtenía las películas recomendadas. Esto presenta un claro problema, ya que el usuario final no conocerá los ids, ya que son un identificador interno de la aplicación. Para obtener el id de una película a partir del mensaje del usuario se utiliza una estrategia similar a la seguida para saber si dos películas son secuelas o no. Utilizando lógica difusa y la distancia Levenshtein se compara la cadena de texto dada por el usuario con los títulos de las películas y se ordenan según su parecido. Si se supera un umbral determinado, se infiere que el título dado por el usuario se corresponde con el de mayor puntuación, y se buscan las recomendaciones utilizando ese id.
 
-\begin{lstlisting}[language=Python, label = {lst:API}, caption= Búsqueda del id de la película dada por el usuario.]
+\begin{lstlisting}[language=Python, label = {lst:API}, caption= {Búsqueda del id de la película dada por el usuario. Es muy posible que el usuario no escriba de forma correcta completamente el título de la película. Estas funciones implementan la búsqueda de la película más parecida dentro de un umbral. El objetivo es transformar una cadena de texto de entrada en un número de fila del dataframe de películas. Es decir, buscan con qué id de película se corresponde ese texto. Para ello, se hace uso de la distancia Levenshtein, de forma que podemos definir la distancia entre dos cadenas de texto. La película cuyo título se parezca más al dado por el usuario (siempre que la distancia sea menor a un umbral) será la que se use de referencia a la hora de hacer recomendaciones.}]
     @staticmethod
     def fuzzing(series_element, string):
         """Dadas dos cadenas de texto calcula la similaridad entre ambas. Se usa para cuando el usuario
@@ -203,7 +204,7 @@ En el \autoref{chap:creacion} se finalizó teniendo un sistema de recomendación
         return df_2.index.values[0] if df_2.iloc[0,-1] > 60 else None
 \end{lstlisting}
 
-\section{Resultados obtenidos}
+\section{Conversaciones de ejemplo}
 
 En la \autoref{fig:TelegramResults} se muestran algunos ejemplos de conversaciones del chatbot de Telegram en las que el usuario aporta el título de una Película, y de una forma relativamente rápida ($\sim 10\ s$) el chatbot da las recomendaciones.\\
 
