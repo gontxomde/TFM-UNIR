@@ -40,6 +40,16 @@ Una vez descritos los objetivos generales del trabajo que se desarrollará, se h
 %--- Work Methodology ---%
 \section{Metodología de Trabajo}\label{sec:metodología}
 
-La metodología de trabajo para el desarrollo de este proyecto se hace dificil de describir \textit{a priori}. A lo largo del trabajo se irán analizando los problemas que vayan surgiendo y proponiendo y justificando las soluciones elegidas de entre las posibles.\\
+En este trabajo, se ha utilizado una metodología definida de forma inicial, aunque posteriormente se han tenido que ir realizando adaptaciones de la misma a medida que se desarrollaba el mismo.\\
 
-En este apartado y de forma previa, cabe detallar que el proyecto se implementará en su gran mayoría en el lenguaje de programación Python, por su versatilidad y la gran cantidad de librerías que hay disponibles para este lenguaje. Además, para resolver problemas específicos, se hará uso de librerías de Procesamiento del Lenguaje Natural como NLTK, SciKit Learn para la implementación de modelos de aprendizaje automático y frameworks web como Flask para la implementación de la API. Finalmente, se hará uso de una plataforma de mensajería instantánea como Telegram, que servirá para implementar la interfaz con el usuario.
+En primer lugar, hay se definió de forma concreta el problema que se quería resolver y se realizó una investigación bibliográfica con la finalidad de conocer los diferentes sistemas de recomendación que existen, de forma que pudieramos definir correctaemente el tipo de sistema que se quería utilizar y los datos necesarios.\\
+
+Partiendo del problema descrito en la introducción, se buscó un conjunto de datos que hiciera posible dar una solución al problema. El conjunto de datos disponible está disponible en \url{https://github.com/harshitcodes/tmdb_mo}.\\
+
+Una vez encontrados unos datos con los que trabajar, se definieron los pasos a seguir para la implementación del proyecto y la resolución del problema:
+\begin{enumerate}
+    \item Limpieza de los datos: En un proyecto de análisis de datos real, es una fase imprescindible. En esta fase se revisan los datos originales, se borran los datos incorrectos y se tratan los valores incorrectos o faltantes. Las herramientas a utilizar en esta etapa serán principalmente Python y la librería Pandas.
+    \item Preprocesamiento de los datos: Una vez se hayan limpiado los datos, será necesario realizar un preprocesamiento de los mismos para que sirvan de entrada al sistema de recomendación, fase en la que se usará Python y librerías de procesamiento de lenguaje natural si fuera necesario.
+    \item Construcción del sistema de recomendación: Tras la investigación bibliográfica y el preprocesamiento de los datos, se construirá el sistema de recomendación en sí. El objetivo es poder dar 3 recomendaciones de películas dada una de entrada, que pueda tener faltas de ortografía, de forma que el sistema sea más flexible.
+    \item Integración del sistema en una API: Desde el principio, la intención ha sido crear un sistema usable y desde una perspectiva \textit{end to end}. En muchas ocasiones este tipo de trabajos se quedan en una mera investigación bibliográfica y teórica. Sin embargo, la intención es que el sistema sea realmente usable por todo el mundo que lo desee. En esta fase se valorarán las diferentes alternativas para proveer de una interfaz al sistema creado, generando un servicio web desde el que puedan realizarse recomendaciones.
+\end{enumerate}

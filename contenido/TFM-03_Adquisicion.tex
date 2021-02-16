@@ -71,7 +71,7 @@ max   &  $3.8\cdot 10^{8}$ &  $875.6$ &  $2.8\cdot 10^{9}$ &   $338.0$ &     $10
 
 El primer paso en la etapa de adquisición de los datos consiste en leer ambos ficheros (en formato csv) y obtener los DataFrame de Pandas correspondientes. Las columnas genres, keywords, production\_countries, production\_companies, spoken\_languages, cast y crew están en formato json en origen. Es por ello que en las funciónes de lectura de los datos tienen un trato especial. Las funciones implementadas son las siguientes:
 
-\begin{lstlisting}[language=Python, caption={Lectura de los datos del fichero de películas. Se carga el fichero desde la ruta y se mapea la fecha de lanzamiento a un objeto de tipo fecha. Algunas de las columnas de entrada están en formato JSON, por lo que se cargan como JSON en vez de como texto plano para poder trabajar con ellas.}]
+\begin{lstlisting}[language=Python, caption={Lectura de los datos del fichero de películas. Se carga el fichero desde la ruta y se mapea la fecha de lanzamiento a un objeto de tipo fecha.}]
 import json
 import pandas as pd
 def carga_peliculas(ruta):
@@ -90,7 +90,7 @@ def carga_peliculas(ruta):
     return df
 \end{lstlisting}
 
-\begin{lstlisting}[language=Python, caption={Lectura de los datos del fichero de créditos. Se carga el fichero desde la ruta dada. Para las columnas que están en formato tipo JSON, es interesante cargarlas como un JSON para tener un diccionario de Python en vez de un campo con el JSON como texto plano.}]
+\begin{lstlisting}[language=Python, caption={Lectura de los datos del fichero de créditos. Se carga el fichero desde la ruta dada.}]
 def carga_creditos(ruta):
     """Función utilizada para cargar el dataset de los créditos. Se cargan como listas los campos que están guardado
     Args:
@@ -142,7 +142,7 @@ def get_director(datos_equipo):
 \end{lstlisting}
 
 Como se ha visto anteriormente, el objetivo del proyecto es crear un sistema de recomendación de películas basado en contenido. Por tanto, resulta vital conseguir información del contenido de las películas. El campo fundamental para conseguir este fin es el campo keywords, que contiene las palabras clave de cada película. Este campo está en origen en formato json, con información que no es relevante para el objetivo del proyecto. Para obtener únicamente las palabras clave se implementa pipe\_flatten\_names que extrae estas palabras clave.
-\begin{lstlisting}[language=Python, caption= {Extracción de las palabras clave a partir del JSON del DataFrame. Cada JSON contiene más información además del valor de la keyword o el género. Se extraen todos los nombre y se devuelven como una cadena de texto.}]
+\begin{lstlisting}[language=Python, caption= {Extracción de las palabras clave a partir del JSON del DataFrame. }]
 def aplana_nombres(keywords):
     """Obtiene una lista con las keywords separadas por un pipe | extrayéndolas del json.
     Args:
@@ -154,7 +154,7 @@ def aplana_nombres(keywords):
 \end{lstlisting}
 
 Para terminar con la etapa de importación y carga de los datos, se crea la función que añade al DataFrame de películas la información de credits necesaria.
-\begin{lstlisting}[language=Python, caption= {El conjunto de datos se encuentra en dos ficheros separados y con estructuras diferentes. Esta función tiene como finalidad juntar esas dos colecciones un un único conjunto de datos. Para ello, se definen unas equivalencias entre columnas y una forma de juntarlas.}]
+\begin{lstlisting}[language=Python, caption= {El conjunto de datos se encuentra en dos ficheros separados y con estructuras diferentes. Se juntan esas dos colecciones un un único conjunto de datos.}]
 def combina_colecciones(peliculas, creditos):
     """Aplica una serie de funciones para añadir información al dataset de películas a partir del
     conjunto de datos de créditos
@@ -264,7 +264,7 @@ Incialmente, el dataset contiene un total de 9474 keywords. En la \autoref{fig:k
     \centering
     \captionsetup{width=10cm}
     \includegraphics[width=12cm]{contenido/imagenes/keyword_histogram.png}
-    \caption{Histograma con el número de keywords de cada película. Como puede observarse, aunque hay casi el doble de keywords únicas que de películas, la mayoría de películas contienen entre 5 y 15 keywords. Esto es importante, ya que si la mayoría únicamente tuviera 1 o 2 keywords, esto podría ser un problema a la hora de establecer relaciones entre películas.}
+    \caption{Histograma con el número de keywords de cada película.}
     \label{fig:keywords_histogram}
 \end{figure}
 
@@ -409,7 +409,7 @@ Conviene recordar que el objetivo de este proyecto es crear un sistema de recome
     \centering
     \captionsetup{width=12cm}
     \includegraphics[height=9.3cm]{./contenido/imagenes/keyword_cleaning.png}
-\caption{Repeticiones de las keywords antes y después de la limpieza. Puede observarse que la mayoría de keywords se repiten muy poco entre películas, esto significa que, por lo general, son keywords que no tienen demasiada utilidad a la hora de recomendar películas similares}
+\caption{Repeticiones de las keywords antes y después de la limpieza.}
 \label{fig:key_cleaning}
 \end{figure}
 
@@ -440,7 +440,7 @@ En la \autoref{fig:correlation} se muestra la matriz de correlación entre las v
     \centering
     \captionsetup{width=12cm}
     \includegraphics[height=10cm]{./contenido/imagenes/correlation.png}
-\caption{Correlación entre las variables del dataset. La matriz es simétrica, ya que la correlación entre A y B es igual que la correlación entre B y A. Un valor cercano a 0 indica una correlación prácticamente inexistente. Una correlación cercana a 1 o -1 indica una correlación fuerte. Puede verse que hay varios pares de variables con correlación positiva. Por ejemplo, hay una correlación bastante notable entre el los ingresos de una película y su popularidad o el número de votantes. No debe confundirse correlación y causalidad, es decir, aunque las variables estén correlacionadas no tiene por qué haber una relación causal directa.}
+\caption{Correlación entre las variables del dataset. La matriz es simétrica, ya que la correlación entre A y B es igual que la correlación entre B y A.}
 \label{fig:correlation}
 \end{figure}
 
@@ -450,7 +450,7 @@ En este caso, se utilizarán varios tipos de imputación, algunos adecuados al d
     \centering
     \captionsetup{width=12cm}
     \includegraphics[width= 13cm]{./contenido/imagenes/completion.png}
-\caption{Completitud de las variables del dataset. Puede verse que la mayoría de variables tienen un factor de completitud bastante grande. Sin embargo, hay algunas variables que serán importantes a la hora de recomendar que trataremos de completar usando diferentes técnicas.}
+\caption{Completitud de las variables del dataset. La mayoría de variables tienen un factor de completitud bastante grande.}
 \label{fig:completion}
 \end{figure}
 
@@ -459,7 +459,7 @@ En este caso, se utilizarán varios tipos de imputación, algunos adecuados al d
 
 En el sistema de recomendación, la variable año se utilizará para recomendar al usuario películas relativamente coetáneas a la dada por el usuario. Con el fin de tener el año informado en la mayor cantidad posible de registros, se completará el año teniendo en cuenta los años de creación del resto de películas de su director y los 3 actores principales, realizando un promedio entre todos ellos. Con este fin se implementa la función \texttt{fill\_year}.
 
-\begin{lstlisting}[language=Python, caption={Completado de la variable año en el dataset utilizando el promedio de los años de las películas de su director y actores principales. Se da por hecho que los directores y actores tienen un periodo de actividad determinado. Se promedia estos años para obtener el año más probable de producción de la película y se introduce en el dataframe en caso de que el año no esté informado para ese registro.}]
+\begin{lstlisting}[language=Python, caption={Completado de la variable año en el dataset utilizando el promedio de los años de las películas de su director y actores principales.}]
 def rellena_ano(df):
     """Completa la columna faltante del año teniendo en cuenta la media
     de los periodos de actividad de los actores y el director.
@@ -510,7 +510,7 @@ Al tratarse de un recomendador basado en contenido, una película que no tenga n
 
 Para resolver el problema que podría suponer tener películas sin palabras clave, se imputarán keywords en las películas teniendo en cuenta su título. Por ejemplo si la película Alien Covenant no tiene keywords, se incluiría alien como keyword por estar en su título y ser ya una keyword existente. Mediante el \autoref{lst:keywords} se logra la imputación en el DataFrame.
 
-\begin{lstlisting}[language=Python, caption={Imputación de keywords a partir del título de la película. Al tratarse de un motor de recomendación basado en contenido, si una película no contiene keywords, será muy complicado que termine siendo recomendada. Para ello, en un intento de que todas las películas tengan keywords, se utiliza su título como fuente de keywords, tomando del mismo las palabras que ya sean keywords de otra película. Este método puede traer asociado algun probelma. Sin embargo, consideramos que es la forma más directa de asociar keywords a una película.}, label ={lst:keywords}]
+\begin{lstlisting}[language=Python, caption={Imputación de keywords a partir del título de la película. Cuando una película no tiene keywords se utiliza su título como fuente de keywords, tomando del mismo las palabras que ya sean keywords de otra película.}, label ={lst:keywords}]
 icuenta = 0
 for indice, fila in df_rellenado[df_rellenado['plot_keywords'].isnull()].iterrows():
     icuenta += 1
@@ -535,7 +535,7 @@ Como puede verse en la \autoref{fig:correlation} hay variables bastante correlac
 df_rellenado = imputacion_regresion(df_rellenado, 'gross', 'num_voted_users')
 \end{lstlisting}
 
-\begin{lstlisting}[language=Python, caption={Imputación de una variable mediante regresión lineal con otra. Tras un análisis de correlación entre variables, es posible rellenar valores faltantes a partir del valor de otra variable que esté estrechamente correlacionada con la que si está informada. Esta función recibe la columna a rellenar y la columna de referencia y mediante una regresión lineal predice los valores faltantes de la columna a rellenar.}, label ={lst:linreg}]
+\begin{lstlisting}[language=Python, caption={Imputación de una variable mediante regresión lineal con otra.}, label ={lst:linreg}]
  def imputacion_regresion(df, col_a_predecir, ref_col):
     """Completa los valores de la variable col_a_predecir haciendo una regresión
     lineal en la que la variable predictora es ref_col.

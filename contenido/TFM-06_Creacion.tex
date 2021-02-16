@@ -43,7 +43,7 @@ Película i & $a_{i1}$ & $a_{i2}$ &  &  & $a_{ij}$ &  &  &  & ... & $a_{iq}$ \\ 
 ...    &          &          &  &  & ...      &  &  &  & ... &          \\ \hline
 Película p & $a_{p1}$ & $a_{p2}$ &  &  & ...      &  &  &  & ... & $a_{pq}$ \\ \hline
 \end{tabular}
-\caption{Matriz generada para el cálculo de la similaridad entre dos películas. Se utiliza la información del director, los actores principales, las keywords que aparecen y los géneros a los que pertenece la película. Estos valores serán las coordenadas en el espacio vectorial definido por estas dimensiones.}
+\caption{Matriz generada para el cálculo de la similaridad entre dos películas. Se utiliza la información del director, los actores principales, las keywords que aparecen y los géneros a los que pertenece la película. .}
 \label{tab:similarity}
 \end{table}
 
@@ -89,7 +89,7 @@ Además, como se verá más adelante, se realizarán algunas operaciones más co
 \section{Definición de las funciones del motor}
 
 En primer lugar es necesario extraer de la entrada seleccionada por el usuario, para ello se implementa la siguiente función:
-\begin{lstlisting}[language=Python, caption= {Variables utilizadas para la creación de la matriz de coordenadas. Toma los valores de las variables director y actores principales así como de las keywords y devuelve una lista con las coordenadas extraidas para la fila dada.}, label= {lst:variablesfila}]
+\begin{lstlisting}[language=Python, caption= {Variables utilizadas para la creación de la matriz de coordenadas.}, label= {lst:variablesfila}]
 def variables_entrada(df, id_entrada): 
     """Calcula los valores tomados por las variables director_name, actor_[1,2,3]_name y plot_keywords para la
     película seleccionada por el usuario.
@@ -145,7 +145,7 @@ def anade_variables(df, VAR_REF):
 
 Con estas dos funciones ya definidas, podemos crear la función \texttt{recomienda}, que será la que realice la selección de las $N$ películas más cercanas a la dada por el usuario. La métrica utilizada para evaluar cuales son las películas más cercanas es la distancia euclídea.
 
-\begin{lstlisting}[language=Python, caption= {Obtención de las 30 mejores películas dada una por el usuario. Es una de las funciones principales del proyecto. Calcula las variables de entrada del algoritmo de KNN y devuelve los ID de las películas más cercanas a la dada.}]
+\begin{lstlisting}[language=Python, caption= {Obtención de las 30 mejores películas dada una por el usuario.}]
 def recomienda(df, id_entrada, N = 31):
     """Crea una lista de N películas similares a las seleccionadas por el usuario
     Args:
@@ -217,7 +217,7 @@ def extrae_parametros(df, ultimas_peliculas, N = 31):
 \end{lstlisting}
 
 
-\begin{lstlisting}[language=Python, caption= {Criterios de selección para la elección de las mejores películas. Se parte de la puntuación de la película y se modifica según la proximidad temporal de la película a evaluar con la película de referencia y el ratio entre votos e ingresos de la película. El objetivo de esto es introducir una heurística que permita ordenar las recomendaciones basadas en contenido de acuerdo con lo que se prevé que preferira el usuario. Se puntuan mejor películas más cercanas a la dada por el usuario y que tengan muchos votos en relación con sus ingresos.}, label={lst:criteria}]
+\begin{lstlisting}[language=Python, caption= {Criterios de selección para la elección de las mejores películas. Se parte de la puntuación de la película y se modifica según la proximidad temporal de la película a evaluar con la película de referencia y el ratio entre votos e ingresos de la película.}, label={lst:criteria}]
 def criterio_seleccion(titulo_principal, ano_ref, titulo, ano, puntuacion, votos_norm, ganancias_norm):
     """Calcula la puntuación de una película como recomendación de otra en base a la similaridad de su título, la distancia temporal entre ambos lanzamientos y el número de votos de la película evaluada y la puntuación de la película. Además, la similitud entre títulos se tiene en cuenta para evitar la recomendación de secuelas. Es decir, si dos películas tienen un nombre muy similar, se desechara como recomendación.
     Args:
@@ -248,7 +248,7 @@ def criterio_seleccion(titulo_principal, ano_ref, titulo, ano, puntuacion, votos
 
 Llegados a este punto, supóngase que el usuario ha elegido la película Harry Potter y la Piedra Filosofal. Sin ejecutar el recomendador y sin sonar demasiado raro, parece que las películas que recomendará el sistema, si no se modifica lo dicho hasta ahora, serán las demás películas de Harry Potter, ya que tendrán las mismas keywords o muy parecidas, compartirán actores y serán de la misma época. Sin embargo, estas películas sean probablemente conocidas por el usuario. Por tanto, se implementa la función \texttt{sequela}, que trata de ver, mediante lógica difusa y medidas como la distancia Levenshtein \cite{levenshtein}, que mide la distancia entre dos palabras en términos de los cambios necesarios para llegar de una a otra. La función \texttt{secuela}, definida en el \autoref{lst:sequel} servirá para filtrar los resultados dados al usuario.
 
-\begin{lstlisting}[language=Python, label={lst:sequel},caption={Determinación de si dos películas son o no secuelas y eliminarlas. Se determina que dos películas son secuelas si tienen el mismo título o es muy similar. Para ello se utilizan técnicas de lógica difusa. Si una de las posibles recomendaciones es unas secuela de la dada por el usuario, esta se elimina, ya que se recomendarían películas demasiado similares.}]
+\begin{lstlisting}[language=Python, label={lst:sequel},caption={Determinación de si dos películas son o no secuelas y eliminarlas. Se determina que dos películas son secuelas si tienen el mismo título o es muy similar.}]
 def secuela(titulo_1, titulo_2):   
     """Compara los títulos de dos películas y devuelve si son similares o no
     Args:
@@ -281,7 +281,7 @@ def quita_secuelas(seleccion_peliculas):
 
 Finalmente, se implementa la función que se encarga de obtener estas 5 mejores películas:
 
-\begin{lstlisting}[language=Python, caption={Esta función se encarga de completar la selección de las 5 películas que se recomendarán. Completa la lista seleccion\_peliculas que contiene 5 películas que se recomendarán al usuario. Las películas son seleccionadas de parametros\_películas y sólo se tienen en cuenta si el título es suficientemente distinto del de otras películas.}]
+\begin{lstlisting}[language=Python, caption={Función  quese encarga de completar la selección de las 5 películas que se recomendarán.}]
 def add_a_seleccion(seleccion_peliculas, parametros_peliculas, N = 31):
     """Completa la lista seleccion_peliculas que contiene 5 películas que se recomendarán al usuario. Las películas son seleccionadas de parametros_películas y sólo se tienen en cuenta si el título es suficientemente distinto del de otras películas.
     Args:

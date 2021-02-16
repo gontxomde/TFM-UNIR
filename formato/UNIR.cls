@@ -95,3 +95,4 @@
 %Números cardinales en inglés
 \RequirePackage[super]{nth}
 
+%\paragraphfont{\normalfont\itshape}
