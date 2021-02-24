@@ -1,6 +1,6 @@
 \chapter{Integración del sistema en una API}\label{chap:api}
 
-Se ha visto que es una regla general en los trabajos de fin de estudios (no únicamente de UNIR, sino en general) orientados al data science y el análisis de datos la no creación de un entorno que podría denominarse productivo. Muchos de estos trabajos se centrar en realizar un análisis de los datos e implementar modelos predictivos, pero siempre en un entorno que podría considerarse ``de laboratorio''. Sin embargo, creemos que un TFE además de ser una forma de finalizar unos estudios, debería ser el inicio de aquello que viene después de ellos; el mundo real.\\
+Se ha visto que es una regla general en los trabajos de fin de estudios (no únicamente de UNIR, sino en general) orientados al Data Science y el análisis de datos la no creación de un entorno que podría denominarse productivo. Muchos de estos trabajos se centrar en realizar un análisis de los datos e implementar modelos predictivos, pero siempre en un entorno que podría considerarse ``de laboratorio''. Sin embargo, creemos que un TFE además de ser una forma de finalizar unos estudios, debería ser el inicio de aquello que viene después de ellos; el mundo real.\\
 
 En este caso, el tema del TFE son los sistemas de recomendación de contenido. En este trabajo se ha revisado en primer lugar su necesidad en el entorno digital actual, en el que existen plataformas con muy variado contenido y usuarios que tienen que ser capaces de navegar por él. Además, se ha realizado una revisión teórica de los sistemas de recomendación, habiéndose explicado los principales tipos y sus aplicaciones. El caso de uso concreto que se ha llevado a cabo en este TFE ha sido relacionado con las películas. Se ha realizado un flujo completo de adquisición y preparación de los datos, a partir de diferentes datasets y se ha construido con ellos un sistema de recomendación. El sistema utiliza las palabras clave de cada película, el director, los actores, el año de lanzamiento y la popularidad de la película, para recomendar a un usuario películas dada una de referencia.\\
 
@@ -8,16 +8,16 @@ Como se ha explicado en el primer párrafo, consideramos que un TFE de desarroll
 
 \section{Telegram}
 
-Telegram es una compañía de mensajería instánea en la nube. Dispone de clientes para la mayoría de plataformas (Android, iOS, Windows Phone, macOS, linux...) y los usuarios pueden intercambiar mensajes, fotos, videos, audio, stickers o archivos de cualquier tipo. Además, la parte del cliente de Telegram es software libre (no así la parte de back-end), aunque en ocasiones la publicación no es inmediata. Como puede deducirse, Telegram es una compañía competidora de Whatsapp, aunque contiene características muy diferentes y atractivas.\\
+Telegram es una compañía de mensajería instantánea en la nube. Dispone de clientes para la mayoría de plataformas (Android, iOS, Windows Phone, macOS, linux...) y los usuarios pueden intercambiar mensajes, fotos, videos, audio, stickers o archivos de cualquier tipo. Además, la parte del cliente de Telegram es software libre (no así la parte de back-end), aunque en ocasiones la publicación no es inmediata. Como puede deducirse, Telegram es una compañía competidora de Whatsapp, aunque contiene características muy diferentes y atractivas.\\
 \begin{figure}[H]
     \centering
     \captionsetup{width=7cm}
     \includegraphics[width=5cm]{contenido/imagenes/Telegram-logo.jpg}
     \caption{Logo de la aplicación Telegram. Fuente: Wikipedia \cite{wiki:telegramImage}}
 \end{figure}
-Entre las innumerables características de Telegram, en este proyecto la de mayor importancia es la posibilidad de crear bots. Los bots de Telegram son aplicaciones de terceros que corren dentro de telegram. Los usuarios pueden interactuar con los bots enviándoles mensajes y comandos. Entre las posibiildades de un bot se encuentran:
+Entre las innumerables características de Telegram, en este proyecto la de mayor importancia es la posibilidad de crear bots. Los bots de Telegram son aplicaciones de terceros que corren dentro de Telegram. Los usuarios pueden interactuar con los bots enviándoles mensajes y comandos. Entre las posibilidades de un bot se encuentran:
 \begin{itemize}
-    \item Obtener notificaciones personalizadas y noticias. Un bot puede actuar como un periódico, enviando contenido relevtante para cada usuario de forma instantanea.
+    \item Obtener notificaciones personalizadas y noticias. Un bot puede actuar como un periódico, enviando contenido relevante para cada usuario de forma instantánea.
     \item Integrarse con otros servicios como GMail, GitHub o YouTube, permitiendo al usuario recibir, por ejemplo, notificaciones sobre cambios en sus repositorios.
     \item Aceptar pagos de usuarios de Telegram, gracias a la posibilidad de un bot de ofrecer servicios de pago.
     \item Creación de herramientas personalizadas, como alertas, previsiones meteorológicas, control domótico de la casa...
@@ -55,7 +55,7 @@ Con estos simples pasos es posible crear un usuario de Telegram con el que cualq
 
 En la sección anterior se ha descrito de forma detallada el funcionamiento del chatbot desde el punto de vista de la API de Telegram, habiéndose explicado el funcionamiento de los bots en general y los pasos a seguir para crear un chatbot en esta plataforma. En esta sección se abordará el otro punto de vista, el de la API creada para implementar el sistema de recomendación.\\
 
-Flask \cite{wiki:FlaskHelloWorld} es un micro framework web escrito en Python para crear aplicaciones web, es decir, páginas dinámicas, API, etc. Existen alternativas en Python como Django, que han sido descartados por ser demasiado complejos, en este caso se necesita crear una API relativamente sencila. Es un framework rpápido y sencillo.
+Flask \cite{wiki:FlaskHelloWorld} es un micro framework web escrito en Python para crear aplicaciones web, es decir, páginas dinámicas, API, etc. Existen alternativas en Python como Django, que han sido descartados por ser demasiado complejos, en este caso se necesita crear una API relativamente sencilla. Es un framework rápido y sencillo.
 
 \begin{figure}[H]
     \centering
@@ -82,7 +82,7 @@ if __name__ == "__main__":
 
 Así, se tendría una aplicación web que en el puerto $8000$ devolvería ``Hello World''. Mediante los decoradores \texttt{@app.route()} se indica la ruta a través de la cual se entra a ese endpoint de la API.\\
 
-La API se ejecutará en una Raspberry PI, debido a las ventajas que tiene en términos de coste frente a un servidor. Es de esperar que el servicio no tenga demasiadas solicitudes, por lo que tampoco tendrá problemas de volumen de peticiones. El problema es hacer que la API esté disponible a través de una URL. Para ello, dado que no se dispone de una IP estática ni de la posibilidad de abrir los puertos en el router, se utiliza el servicio \href{https://ngrok.com/}{Ngrok}. Ngrok es un servicio gratuito que publica un determinado puerto de localhost a través de una URL a través de un tunel.\\
+La API se ejecutará en una Raspberry PI, debido a las ventajas que tiene en términos de coste frente a un servidor. Es de esperar que el servicio no tenga demasiadas solicitudes, por lo que tampoco tendrá problemas de volumen de peticiones. El problema es hacer que la API esté disponible a través de una URL. Para ello, dado que no se dispone de una IP estática ni de la posibilidad de abrir los puertos en el router, se utiliza el servicio \href{https://ngrok.com/}{Ngrok}. Ngrok es un servicio gratuito que publica un determinado puerto de localhost a través de una URL a través de un túnel.\\
 
 Una vez explicado el funcionamiento, en el \autoref{lst:API}
 
@@ -243,7 +243,7 @@ En este tipo de proyectos, resulta complicado evaluar los resultados. La calidad
 
 \section{Código utilizado}
 
-A lo largo del proyecto se ha ido adjuntando el código utilizado para cada una de las tareas, ya que creemos que resulta interesante conocer la estrategia seguida para tarea. Sin embargo, lo que se ha adjuntado son piezas de un Jupyter Notebook que genera el sistema de recomendación de forma interactiva (\autoref{app:notebook}. El código real se encuentra organizado en diferentes clases (preprocesado, imputación, recomendador, API...) para tener una estructura más organizada. El código puede consultarse en el repositorio de GitHub \url{https://github.com/gontxomde/RecommendationEngine} con una pequeña guia de despliegue y uso.\\
+A lo largo del proyecto se ha ido adjuntando el código utilizado para cada una de las tareas, ya que creemos que resulta interesante conocer la estrategia seguida para tarea. Sin embargo, lo que se ha adjuntado son piezas de un Jupyter Notebook que genera el sistema de recomendación de forma interactiva (\autoref{app:notebook}. El código real se encuentra organizado en diferentes clases (preprocesado, imputación, recomendador, API...) para tener una estructura más organizada. El código puede consultarse en el repositorio de GitHub \url{https://github.com/gontxomde/RecommendationEngine} con una pequeña guía de despliegue y uso.\\
 
 De la misma forma, a lo largo del proyecto, se han incluido en las funciones los denominados docstrings, que son formas estándar de definir el uso y los argumentos de una función en Python. La finalidad del uso de estos docstrings, además de hacer el código legible, es posibilitar el uso de Sphinx. Sphinx es un software que permite generar la documentación del código de forma automática, generando un documento html o latex fácilmente consultable. Además de en el repositorio antes mencionado, la documentación de la librería creada en este proyecto puede consultarse en el repositorio anteriormente mencionado.\\
 

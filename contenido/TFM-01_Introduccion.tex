@@ -24,19 +24,25 @@ Ha quedado patente que en la actualidad se hace necesario disponer de sistemas q
 Como se ha visto anteriormente, es muy beneficioso para las empresas que ofrecen productos online ser capaces de recomendar a sus usuarios otros productos a partir de los ya consumidos. Esto tiene, dos ventajas fundamentales:
 
 \begin{itemize}
-    \item La plataforma es capaz de orientar al usuario, de forma que se evita una posible fuga de usuarios a otras plataformas ante la ingente cantidad de productos a consumir.
+    \item ?La plataforma es capaz de orientar al usuario, de forma que se evita una posible fuga de usuarios a otras plataformas ante la ingente cantidad de productos a consumir.
     \item Una vez el usuario ha consumido un producto pueden serle recomendados otros relacionados, incrementando el número de productos consumidos por el usuario.
 \end{itemize}
 
-En este trabajo utilizaremos un conjunto de datos compuesto por información sobre películas, con la finalidad de construir un sistema de recomendación de películas que, partiendo de una película propuesta por el usuario, pueda recomendarle otras similares. La diferencia con el motor de búsqueda de plataformas como Netflix, es que estará disponible fuera de estas plataformas, en una app tan común como Telegram, y que recomendará películas de todo tipo, no solo las que estén en una determinada plataforma. ¿Es posible crear un sistema de recomendación usando recomendación basada en contenido? ¿Es Telegram una buena vía para realizar esta recomendación? ¿Prefiere el usuario recomendaciones que no tengan en cuenta la plataforma, pudiendo ver contenido más variado? Estas son algunas de las preguntas que trataremos de resolver en este proyecto. La forma en la que tratremos de mejorar los sistemas de plataformas como Netflix o Prime Video será, por tanto, en términos de riqueza del contenido y de posibilidad de recibir recomendaciones en cualquier situación, no solo dentro de estas plataformas.\\
+En este trabajo utilizaremos un conjunto de datos compuesto por información sobre películas, con la finalidad de construir un sistema de recomendación de películas que, partiendo de una película propuesta por el usuario, pueda recomendarle otras similares. La diferencia con el motor de búsqueda de plataformas como Netflix, es que estará disponible fuera de estas plataformas, en una app tan común como Telegram, y que recomendará películas de todo tipo, no solo las que estén en una determinada plataforma. Las preguntas a las que dará respuesta este TFE son:
+\begin{itemize}
+    \item \textquestiondown Es posible crear un sistema de recomendación usando recomendación basada en contenido? \textquestiondown Es Telegram una buena vía para realizar esta recomendación?
+    \item \textquestiondown Prefiere el usuario recomendaciones que no tengan en cuenta la plataforma, pudiendo ver contenido más variado?
+\end{itemize}
 
-El conjunto de datos utilizado posee metadatos sobre las películas, como palabras clave, presupuesto, puntuación de los usuarios... Información relevante y suficiente para poder implementar este sistema. Como puede deducirse, es necesario un soporte para este sistema que permita al usuario final poderlo utilizar. Lo habitual sería integrarlo con un trabajo de User Experience (UX) y que quedara, por tanto, integrado en la plataforma. En este caso no disponemos de una plataforma en la que integrar el sistema, por lo que se creará una API (que contendrá el sistema de recomendación) que podrá ser llamada por un bot de Telegram, de forma que recomiende películas a un usuario a partir de otra.\\
+La forma en la que trataremos de mejorar los sistemas de plataformas como Netflix o Prime Video será, por tanto, en términos de riqueza del contenido y de posibilidad de recibir recomendaciones en cualquier situación, no solo dentro de estas plataformas.\\
+
+El conjunto de datos utilizado\footnote{El conjunto de datos está disponible en \url{https://tinyurl.com/ypfdw8w}} posee metadatos sobre las películas, como palabras clave, presupuesto, puntuación de los usuarios... Información relevante y suficiente para poder implementar este sistema. Como puede deducirse, es necesario un soporte para este sistema que permita al usuario final poderlo utilizar. Lo habitual sería integrarlo con un trabajo de User Experience (UX) y que quedara, por tanto, integrado en la plataforma. En este caso no disponemos de una plataforma en la que integrar el sistema, por lo que se creará una API (que contendrá el sistema de recomendación) que podrá ser llamada por un bot de Telegram, de forma que recomiende películas a un usuario a partir de otra.\\
 
 \begin{figure}[h]
     \centering
     \captionsetup{width=10cm}
     \includegraphics[width=12cm]{contenido/imagenes/initial.png}
-    \caption{Proceso de tratado de la información para la creación del sistema de recomendación.}
+    \caption{Metodología de trabajo abreviada. Proceso de tratado de la información para la creación del sistema de recomendación.}
     \label{fig:process}
 \end{figure}
 
@@ -60,10 +66,11 @@ El trabajo, como se ha descrito en los capítulos anteriores, tiene como objetiv
     %\item \textit{Preliminary Data Analysis}. Caso de uso de análisis de datos para resolución de preguntas de negocio. %Al trabajar con un conjunto de datos siempre es importante realizar un análisis previo, de forma que pueda %entenderse la estructura de los mismos. También se verá la utilidad de disponer de un conjunto de datos %relativamente grande a la hora de responder a preguntas que pueden surgir en relación con la informacion contenida %en los mismos.
     
     \item \autoref{chap:api}: Integración del sistema en una API y creación de un chatbot. Es importante que nuestro sistema de recomendación sea explotable por los usuarios, de nada sirve tener un buen sistema de recomendación si no puede ser usado. Se explicará la creación de un bot de Telegram y cómo crear una API que pueda ser llamada por el bot.
-    \item \autoref{chap:resultados}: Próximos pasos. Finalmente, se realizará un repaso de lo desarrollado en el trabajo y se propondrán puntos en los que mejorar el sistema que no hayan podido implementarse por algún motivo.
+    \item \autoref{chap:resultados}: Resultados. En este capítulo se detallará la metodología seguida para realizar una evaluación del sistema construido en el trabajo y se mostrarán los resultados obtenidos.
+    \item \autoref{chap:futuro}: Conclusiones y trabajo futuro. Finalmente, se realizará un repaso de lo desarrollado en el trabajo y se propondrán puntos en los que mejorar el sistema que no hayan podido implementarse por algún motivo.
 \end{itemize}
 
-\section{Trabajo desarrollado}\label{sec:trabajodesarrollado}
+\section{Alcance del trabajo desarrollado}\label{sec:trabajodesarrollado}
 
 En esta memoria, se trata de solventar el problema que se ha comentado en las secciones anteriores. Las plataformas de contenido disponen de sistemas de recomendación potentes, pero con una limitación de origen: solo recomiendan contenido de sus plataformas. Esto hace que si vemos una película concreta en una plataforma y esta nos recomienda otra, es posible que haya mejores recomendaciones que la plataforma en cuestión no esté realizando debido a que no dispone de ese contenido.\\ 
 

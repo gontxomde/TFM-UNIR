@@ -281,7 +281,7 @@ def quita_secuelas(seleccion_peliculas):
 
 Finalmente, se implementa la función que se encarga de obtener estas 5 mejores películas:
 
-\begin{lstlisting}[language=Python, caption={Función  quese encarga de completar la selección de las 5 películas que se recomendarán.}]
+\begin{lstlisting}[language=Python, caption={Función que se encarga de completar la selección de las 5 películas que se recomendarán.}]
 def add_a_seleccion(seleccion_peliculas, parametros_peliculas, N = 31):
     """Completa la lista seleccion_peliculas que contiene 5 películas que se recomendarán al usuario. Las películas son seleccionadas de parametros_películas y sólo se tienen en cuenta si el título es suficientemente distinto del de otras películas.
     Args:
@@ -319,7 +319,7 @@ A modo de \textit{wrapper} de este flujo, la función \textit{find\_similarities
     \item King Kong
 \end{enumerate}
 
-\begin{lstlisting}[language=Python, caption=Wrapper del pipeline de búsqueda de recomendaciones. Se trata de la función final, es decir, la que llama a todas las demás para encontrar las películas recomendadas. Parte de un ID de película y busca las similares en términos de keywords, generos, etc., las ordena por la heurística definida y ddevuelve las seleccionadas]
+\begin{lstlisting}[language=Python, caption={Wrapper del pipeline de búsqueda de recomendaciones. Se trata de la función final, es decir, la que llama a todas las demás para encontrar las películas recomendadas. Parte de un ID de película y busca las similares en términos de keywords, géneros, etc., las ordena por la heurística definida y devuelve las seleccionadas}]
 def encuentra_similaridades(df, id_entrada, borra_secuelas = True, verbose = False, N = 31):
     """Dado el id de una película busca las 5 mejores recomendaciones.
     Args:
