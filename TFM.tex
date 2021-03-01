@@ -29,17 +29,17 @@
   contenido/TFM-00_Abstract,
   contenido/TFM-01_Introduccion,
   contenido/TFM-02_Objetivos_y_Metodologia,
-  contenido/TFM-03_Adquisicion,
-  contenido/TFM-04_Analisis,
-  contenido/TFM-05_Recomendacion,
-  contenido/TFM-06_Creacion,
-  contenido/TFM-07_Integracion,
-  contenido/TFM-09_Results,
-  contenido/TFM-10_Bibliografia,
-  contenido/notebook,
-  contenido/TFM-11_Apendice_1,
-  contenido/TFM-11_Apendice_2,
-  contenido/TFM-11_Apendice_3
+  contenido/TFM-03_Marco_Teorico,
+  contenido/TFM-04_Adquisicion,
+  contenido/TFM-05_Creacion,
+  contenido/TFM-06_Integracion,
+  contenido/TFM-07_Results_Future,
+  contenido/TFM-08_Biblio,
+%  contenido/TFM-10_Bibliografia,
+%  contenido/notebook,
+%  contenido/TFM-11_Apendice_1,
+%  contenido/TFM-11_Apendice_2,
+%  contenido/TFM-11_Apendice_3
 }
 \usepackage[final]{pdfpages}
 
@@ -93,19 +93,18 @@
         \setcounter{page}{13}
         %Incluir aqui todos los capitulos (carpeta contenido)
     	\include{contenido/TFM-01_Introduccion}
-    	\include{contenido/TFM-05_Recomendacion}
-        \include{contenido/TFM-02_Objetivos_y_Metodologia}
-        
-        \include{contenido/TFM-03_Adquisicion}
+    	\include{contenido/TFM-02_Objetivos_y_Metodologia}
+    	\include{contenido/TFM-03_Marco_Teorico}
+        \include{contenido/TFM-04_Adquisicion}
         %\include{contenido/TFM-04_Analisis},
         %\include{contenido/TFM-05_Recomendacion},
-        \include{contenido/TFM-06_Creacion}
-        \include{contenido/TFM-07_Integracion}
-        \include{contenido/TFM-09_Results}
+        \include{contenido/TFM-05_Creacion}
+        \include{contenido/TFM-06_Integracion}
+        \include{contenido/TFM-07_Results_Future}
         \nocite{*}
 
     %--- Apéndices y bibliografia ---%
-        \include{contenido/TFM-10_Bibliografia}
+        \include{contenido/TFM-08_Biblio}
        % \begin{appendices}
         %    %Incluir aqui todos los apendices (carpeta contenido).
         %    \include{contenido/TFM-11_Apendice_1}
