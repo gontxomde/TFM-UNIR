@@ -56,9 +56,10 @@
         \hspace{1cm}
         \newpage
         \setcounter{page}{1}
-        \tableofcontents    % Índice
-        \clearpage
         \include{contenido/TFM-00_Abstract}  %Abtract
+        %\hspace{1cm}
+        %\clearpage
+        \tableofcontents    % Índice
         %\listoffigures      % Índice de imagenes
         {%
         \let\oldnumberline\numberline%
@@ -89,25 +90,26 @@
     %---    Cuerpo ---% 
     \mainmatter
     \pagestyle{mainmatter}
-        \setcounter{page}{10}
+        \setcounter{page}{13}
         %Incluir aqui todos los capitulos (carpeta contenido)
     	\include{contenido/TFM-01_Introduccion}
+    	\include{contenido/TFM-05_Recomendacion}
         \include{contenido/TFM-02_Objetivos_y_Metodologia}
-        \include{contenido/TFM-05_Recomendacion}
-        \include{contenido/TFM-03_Adquisicion},
+        
+        \include{contenido/TFM-03_Adquisicion}
         %\include{contenido/TFM-04_Analisis},
         %\include{contenido/TFM-05_Recomendacion},
-        \include{contenido/TFM-06_Creacion},
-        \include{contenido/TFM-07_Integracion},
+        \include{contenido/TFM-06_Creacion}
+        \include{contenido/TFM-07_Integracion}
         \include{contenido/TFM-09_Results}
         \nocite{*}
 
     %--- Apéndices y bibliografia ---%
         \include{contenido/TFM-10_Bibliografia}
-        \begin{appendices}
+       % \begin{appendices}
         %    %Incluir aqui todos los apendices (carpeta contenido).
-            \include{contenido/TFM-11_Apendice_1}
+        %    \include{contenido/TFM-11_Apendice_1}
         %    \include{contenido/TFM-11_Apendice_2}
         %    \include{contenido/TFM-11_Apendice_3}
-        \end{appendices}
+       % \end{appendices}
 \end{document}

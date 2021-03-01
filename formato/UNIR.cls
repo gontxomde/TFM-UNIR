@@ -2,7 +2,7 @@
 \ProvidesClass{formato/UNIR}[2018/09/01 UNIR TFM LaTeX class]
 
 % Clase base (libro)
-\LoadClass[a4paper,11pt,oneside]{book}
+\LoadClass[a4paper,11pt,twoside]{book}
 \RequirePackage{courier}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage[T1]{fontenc}
